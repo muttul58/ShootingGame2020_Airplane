@@ -6,6 +6,7 @@ TagManager:
   tags:
   - BorderPlayer
   - PlayerBullet
+  - Boom
   layers:
   - Default
   - TransparentFX

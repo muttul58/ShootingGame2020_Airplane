@@ -8,6 +8,9 @@ public class ObjectManager : MonoBehaviour
     public GameObject playerBulletObjB;
     public GameObject playerBoomObj;
 
+    public AudioSource bulletPlayerSound;
+    public AudioSource boomPlayerSound;
+
     void Start()
     {
         

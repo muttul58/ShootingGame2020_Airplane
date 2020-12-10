@@ -19,6 +19,12 @@ public class Player : MonoBehaviour
     public bool isTouchRight;
     public bool isTouchLeft;
 
+    public bool isBoom;
+    public bool isShield;
+
+    public GameObject boomEffect;
+    public GameObject shield;
+
     public ObjectManager objectManager;
 
 
@@ -115,6 +121,9 @@ public class Player : MonoBehaviour
             return;
         if (curBulletShootTime < maxBulletShootTime)
             return;
+        
+        // 플레이어의 총알 발사 소리 재생
+        objectManager.bulletPlayerSound.Play();
 
         if (bulletType == 1 && power == 1)
         {
@@ -123,6 +132,7 @@ public class Player : MonoBehaviour
             GameObject bullet_01 = Instantiate(objectManager.playerBulletObjB, transform.position + Vector3.up * 0.7f, transform.rotation);
             Rigidbody2D rigid_01 = bullet_01.GetComponent<Rigidbody2D>();
             rigid_01.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
+
         }
         else if (bulletType == 2 && power == 1)
         {
@@ -134,9 +144,17 @@ public class Player : MonoBehaviour
             Rigidbody2D rigid_01R = bullet_01R.GetComponent<Rigidbody2D>();
             Rigidbody2D rigid_01C = bullet_01C.GetComponent<Rigidbody2D>();
             Rigidbody2D rigid_01L = bullet_01L.GetComponent<Rigidbody2D>();
+
             rigid_01R.AddForce((Vector3.up + new Vector3(-0.3f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
             rigid_01C.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
             rigid_01L.AddForce((Vector3.up + new Vector3(0.3f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
+
+            // 오른쪽 왼쪽 사선으로 나가는 총알 회전
+            Vector3 rotVec_01R = Vector3.forward * 12f ;
+            Vector3 rotVec_01L = Vector3.forward * -12f ;
+            bullet_01R.transform.Rotate(rotVec_01R);
+            bullet_01L.transform.Rotate(rotVec_01L);
+
         }
         else if (bulletType == 1 && power == 2)
         {
@@ -163,6 +181,12 @@ public class Player : MonoBehaviour
             rigid_02R.AddForce((Vector3.up + new Vector3(-0.3f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
             rigid_02C.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
             rigid_02L.AddForce((Vector3.up + new Vector3(0.3f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
+            
+            // 오른쪽 왼쪽 사선으로 나가는 총알 회전
+            Vector3 rotVec_02R = Vector3.forward * 12f;
+            Vector3 rotVec_02L = Vector3.forward * -12f;
+            bullet_02R.transform.Rotate(rotVec_02R);
+            bullet_02L.transform.Rotate(rotVec_02L);
         }
         else if (bulletType == 1 && power == 3)
         {
@@ -198,10 +222,21 @@ public class Player : MonoBehaviour
             rigid_03CC.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
             rigid_03C .AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
             rigid_03L .AddForce((Vector3.up + new Vector3(0.3f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
+
+            // 오른쪽 왼쪽 사선으로 나가는 총알 회전
+            Vector3 rotVec_03R = Vector3.forward * 12f;
+            Vector3 rotVec_03L = Vector3.forward * -12f;
+            bullet_03R.transform.Rotate(rotVec_03R);
+            bullet_03L.transform.Rotate(rotVec_03L);
         }
 
         curBulletShootTime = 0;
     }
+
+/*    void PlayerShootSound()
+    {
+        objectManager.bulletPlayerSound.Play();
+    }*/
 
     void Reload()
     {
@@ -215,5 +250,50 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F5)) power = 1;
         if (Input.GetKeyDown(KeyCode.F6)) power = 2;
         if (Input.GetKeyDown(KeyCode.F7)) power = 3;
+        if (Input.GetKeyDown(KeyCode.B)) BoomShow();
+        if (Input.GetKeyDown(KeyCode.S)) ShieldHotKey();
+        if (Input.GetKeyDown(KeyCode.F9)) ShieldShow();
+       
+        
     }
+
+    void BoomShow()
+    {
+        objectManager.boomPlayerSound.Play();
+        boomEffect.SetActive(true);
+        Invoke("BoomHide", 1.3f);
+    }
+    void BoomHide()
+    {
+        boomEffect.SetActive(false);
+    }
+
+
+    // 단축키로 쉴드 실행한 경우
+    void ShieldHotKey()
+    {
+        if (isShield == false)
+        {
+            isShield = true;
+            shield.SetActive(true);
+        }
+        else
+        {
+            isShield = false;
+            shield.SetActive(false);
+        }
+    }
+
+    // 쉴드 아이템을 먹은 경우
+    void ShieldShow()
+    {
+        shield.SetActive(true);
+        if(isShield==false) Invoke("ShieldHide", 5f);
+    }
+    void ShieldHide()
+    {
+        shield.SetActive(false);
+    }
+
+
 }

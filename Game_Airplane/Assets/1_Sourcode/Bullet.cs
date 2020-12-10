@@ -11,5 +11,8 @@ public class Bullet : MonoBehaviour
     {
         if (collision.gameObject.tag == "BorderPlayer")
             Destroy(gameObject);
+
+        else if (collision.gameObject.tag == "Boom")
+            Destroy(gameObject);
     }
 }
