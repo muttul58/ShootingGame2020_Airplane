@@ -121,14 +121,25 @@ public class Player : MonoBehaviour
             return;
         if (curBulletShootTime < maxBulletShootTime)
             return;
-        
+
+        if(bulletType == 1)
+        {
+            bulletSpeed = 2 + power;
+            maxBulletShootTime = 0.5f - (0.1f * power);
+        }
+        else
+        {
+            bulletSpeed = 1.0f + (0.5f * power);
+            maxBulletShootTime = 0.6f - (0.1f * power);
+            Debug.Log(bulletSpeed);
+            Debug.Log(maxBulletShootTime);
+        }
+
         // 플레이어의 총알 발사 소리 재생
         objectManager.bulletPlayerSound.Play();
 
         if (bulletType == 1 && power == 1)
         {
-            bulletSpeed = 3;
-            maxBulletShootTime = 0.3f;
             GameObject bullet_01 = Instantiate(objectManager.playerBulletObjB, transform.position + Vector3.up * 0.7f, transform.rotation);
             Rigidbody2D rigid_01 = bullet_01.GetComponent<Rigidbody2D>();
             rigid_01.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
@@ -145,9 +156,9 @@ public class Player : MonoBehaviour
             Rigidbody2D rigid_01C = bullet_01C.GetComponent<Rigidbody2D>();
             Rigidbody2D rigid_01L = bullet_01L.GetComponent<Rigidbody2D>();
 
-            rigid_01R.AddForce((Vector3.up + new Vector3(-0.3f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
+            rigid_01R.AddForce((Vector3.up + new Vector3(-0.2f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
             rigid_01C.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
-            rigid_01L.AddForce((Vector3.up + new Vector3(0.3f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
+            rigid_01L.AddForce((Vector3.up + new Vector3(0.2f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
 
             // 오른쪽 왼쪽 사선으로 나가는 총알 회전
             Vector3 rotVec_01R = Vector3.forward * 12f ;
@@ -158,9 +169,6 @@ public class Player : MonoBehaviour
         }
         else if (bulletType == 1 && power == 2)
         {
-            bulletSpeed = 4;
-            maxBulletShootTime = 0.25f;
-
             GameObject bullet_02R = Instantiate(objectManager.playerBulletObjB, transform.position + Vector3.up * 0.7f + Vector3.right * -0.2f, transform.rotation);
             GameObject bullet_02L = Instantiate(objectManager.playerBulletObjB, transform.position + Vector3.up * 0.7f + Vector3.right * 0.2f, transform.rotation);
             Rigidbody2D rigid_02R = bullet_02R.GetComponent<Rigidbody2D>();
@@ -178,9 +186,9 @@ public class Player : MonoBehaviour
             Rigidbody2D rigid_02R = bullet_02R.GetComponent<Rigidbody2D>();
             Rigidbody2D rigid_02C = bullet_02C.GetComponent<Rigidbody2D>();
             Rigidbody2D rigid_02L = bullet_02L.GetComponent<Rigidbody2D>();
-            rigid_02R.AddForce((Vector3.up + new Vector3(-0.3f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
+            rigid_02R.AddForce((Vector3.up + new Vector3(-0.2f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
             rigid_02C.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
-            rigid_02L.AddForce((Vector3.up + new Vector3(0.3f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
+            rigid_02L.AddForce((Vector3.up + new Vector3(0.2f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
             
             // 오른쪽 왼쪽 사선으로 나가는 총알 회전
             Vector3 rotVec_02R = Vector3.forward * 12f;
@@ -190,9 +198,6 @@ public class Player : MonoBehaviour
         }
         else if (bulletType == 1 && power == 3)
         {
-            bulletSpeed = 5;
-            maxBulletShootTime = 0.2f;
-
             GameObject bullet_03RR = Instantiate(objectManager.playerBulletObjA, transform.position + Vector3.up * 0.7f + Vector3.right * -0.5f, transform.rotation);
             GameObject bullet_03R  = Instantiate(objectManager.playerBulletObjB, transform.position + Vector3.up * 0.7f + Vector3.right * -0.2f, transform.rotation);
             GameObject bullet_03L  = Instantiate(objectManager.playerBulletObjB, transform.position + Vector3.up * 0.7f + Vector3.right *  0.2f, transform.rotation);
@@ -218,10 +223,10 @@ public class Player : MonoBehaviour
             Rigidbody2D rigid_03CC = bullet_03CC.GetComponent<Rigidbody2D>();
             Rigidbody2D rigid_03C  = bullet_03C.GetComponent<Rigidbody2D>();
             Rigidbody2D rigid_03L  = bullet_03L.GetComponent<Rigidbody2D>();
-            rigid_03R .AddForce((Vector3.up + new Vector3(-0.3f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
+            rigid_03R .AddForce((Vector3.up + new Vector3(-0.2f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
             rigid_03CC.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
             rigid_03C .AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
-            rigid_03L .AddForce((Vector3.up + new Vector3(0.3f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
+            rigid_03L .AddForce((Vector3.up + new Vector3(0.2f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
 
             // 오른쪽 왼쪽 사선으로 나가는 총알 회전
             Vector3 rotVec_03R = Vector3.forward * 12f;
