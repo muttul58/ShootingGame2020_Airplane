@@ -7,6 +7,8 @@ TagManager:
   - BorderPlayer
   - PlayerBullet
   - Boom
+  - Enemy
+  - Shield
   layers:
   - Default
   - TransparentFX

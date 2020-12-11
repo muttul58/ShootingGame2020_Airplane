@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
 
     public bool isBoom;
     public bool isShield;
+    public bool isBGSound;
 
     public GameObject boomEffect;
     public GameObject shield;
@@ -30,7 +31,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        //GameObject gameObject = GameObject.Find("G")
+
     }
 
     void Start()
@@ -39,6 +40,7 @@ public class Player : MonoBehaviour
         power = 1;
         life = 3;
         bulletType = 1;
+        isBGSound = true;
     }
 
     void Update()
@@ -117,12 +119,17 @@ public class Player : MonoBehaviour
 
     void BulletShoot()
     {
+        // 스페이스 키 누르면 총알 발사
         if (!Input.GetKey("space"))
             return;
+        
+        // 총알 발사 시간 설정보다 작으면 발사 안됨.
         if (curBulletShootTime < maxBulletShootTime)
             return;
 
-        if(bulletType == 1)
+        // 총알타입(bulletType)  1: 직선 발사, 2: 점점 퍼지게 발사
+        // 파워(power) 1, 2, 3에 따라 총알 형태와 속도 설정
+        if (bulletType == 1)
         {
             bulletSpeed = 2 + power;
             maxBulletShootTime = 0.5f - (0.1f * power);
@@ -131,24 +138,21 @@ public class Player : MonoBehaviour
         {
             bulletSpeed = 1.0f + (0.5f * power);
             maxBulletShootTime = 0.6f - (0.1f * power);
-            Debug.Log(bulletSpeed);
-            Debug.Log(maxBulletShootTime);
         }
 
         // 플레이어의 총알 발사 소리 재생
-        objectManager.bulletPlayerSound.Play();
+        objectManager.bulletShootSound.Play();
 
-        if (bulletType == 1 && power == 1)
+        
+        if (bulletType == 1 && power == 1)  // 직선 1발
         {
             GameObject bullet_01 = Instantiate(objectManager.playerBulletObjB, transform.position + Vector3.up * 0.7f, transform.rotation);
             Rigidbody2D rigid_01 = bullet_01.GetComponent<Rigidbody2D>();
             rigid_01.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
 
         }
-        else if (bulletType == 2 && power == 1)
+        else if (bulletType == 2 && power == 1)  // 좌, 중, 우 각 1발 퍼지면서 이동
         {
-            bulletSpeed = 1.5f;
-            maxBulletShootTime = 0.5f;
             GameObject bullet_01R = Instantiate(objectManager.playerBulletObjA, transform.position + Vector3.up * 0.7f, transform.rotation);
             GameObject bullet_01C = Instantiate(objectManager.playerBulletObjA, transform.position + Vector3.up * 0.7f, transform.rotation);
             GameObject bullet_01L = Instantiate(objectManager.playerBulletObjA, transform.position + Vector3.up * 0.7f, transform.rotation);
@@ -178,8 +182,6 @@ public class Player : MonoBehaviour
         }
         else if (bulletType == 2 && power == 2)
         {
-            bulletSpeed = 2f;
-            maxBulletShootTime = 0.4f;
             GameObject bullet_02R = Instantiate(objectManager.playerBulletObjA, transform.position + Vector3.up * 0.7f, transform.rotation);
             GameObject bullet_02C = Instantiate(objectManager.playerBulletObjB, transform.position + Vector3.up * 0.7f, transform.rotation);
             GameObject bullet_02L = Instantiate(objectManager.playerBulletObjA, transform.position + Vector3.up * 0.7f, transform.rotation);
@@ -213,8 +215,6 @@ public class Player : MonoBehaviour
         }
         else if (bulletType == 2 && power == 3)
         {
-            bulletSpeed = 2.5f;
-            maxBulletShootTime = 0.3f;
             GameObject bullet_03R  = Instantiate(objectManager.playerBulletObjA, transform.position + Vector3.up * 0.7f, transform.rotation);
             GameObject bullet_03CC = Instantiate(objectManager.playerBulletObjB, transform.position + Vector3.up * 0.7f + Vector3.right * -0.2f, transform.rotation);
             GameObject bullet_03C  = Instantiate(objectManager.playerBulletObjB, transform.position + Vector3.up * 0.7f + Vector3.right *  0.2f, transform.rotation);
@@ -235,19 +235,23 @@ public class Player : MonoBehaviour
             bullet_03L.transform.Rotate(rotVec_03L);
         }
 
+        // 총알 발사 후 장전으로 현재 시간 0으로 초기화
         curBulletShootTime = 0;
     }
 
 /*    void PlayerShootSound()
     {
         objectManager.bulletPlayerSound.Play();
-    }*/
+    }
+*/
 
+    // 총알 발사 시간 계산
     void Reload()
     {
         curBulletShootTime += Time.deltaTime;
     }
 
+    // 단축키 설정
     void HotKey()
     {
         if (Input.GetKeyDown(KeyCode.F1)) bulletType = 1;
@@ -258,10 +262,13 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.B)) BoomShow();
         if (Input.GetKeyDown(KeyCode.S)) ShieldHotKey();
         if (Input.GetKeyDown(KeyCode.F9)) ShieldShow();
-       
-        
+        if (Input.GetKeyDown(KeyCode.F10)) BGSoundOnOff();
+
+
+
     }
 
+    // 단축키 'B'로 폭탄 켜고/끄기
     void BoomShow()
     {
         objectManager.boomPlayerSound.Play();
@@ -274,7 +281,7 @@ public class Player : MonoBehaviour
     }
 
 
-    // 단축키로 쉴드 실행한 경우
+    // 단축키 'S'로 쉴드 켜고/끄기
     void ShieldHotKey()
     {
         if (isShield == false)
@@ -299,6 +306,22 @@ public class Player : MonoBehaviour
     {
         shield.SetActive(false);
     }
+    
+    // 단축키 F10 으로 배경음악 켜고/끄기
+    void BGSoundOnOff()
+    {
+        if (isBGSound)
+        {
+            isBGSound = false;
+            objectManager.backgroundSound.Stop();
+        }
+        else
+        {
+            isBGSound = true;
+            objectManager.backgroundSound.Play();
+        }
+    }
+
 
 
 }
