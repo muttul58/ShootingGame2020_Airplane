@@ -54,6 +54,7 @@ public class Enemy : MonoBehaviour
             Bullet bulletCode = collision.gameObject.GetComponent<Bullet>();
 
             hp -= bulletCode.dmg;
+
             // Debug.Log("hp : " + hp);
             if (hp <= 0)
             {
