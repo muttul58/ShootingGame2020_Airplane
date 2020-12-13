@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8020033561328514490}
   m_Layer: 0
   m_Name: EnemyL
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50,8 +50,12 @@ MonoBehaviour:
   hp: 50
   enemyScore: 500
   enemyName: L
+  sprites:
+  - {fileID: 21300000, guid: 62b0ef17930ac1b40b86a245ae2639c3, type: 3}
+  - {fileID: 21300000, guid: c3e7770dfa29e474599647a79db9b86c, type: 3}
   objectManager: {fileID: 0}
   player: {fileID: 0}
+  spriteRenderer: {fileID: 0}
 --- !u!212 &8020033561328514492
 SpriteRenderer:
   m_ObjectHideFlags: 0

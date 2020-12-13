@@ -31,12 +31,11 @@ public class Player : MonoBehaviour
     public bool isLaserShoot;
     public bool isBGSound;
 
-    public GameObject boomEffect;
     public GameObject shield;
     public GameObject laser;
 
     public ObjectManager objectManager;
-
+    public GameManager gameManager;
 
     private void Awake()
     {
@@ -47,7 +46,7 @@ public class Player : MonoBehaviour
     {
         speed = 5;
         power = 1;
-        life = 3;
+        //life = 3;
         bulletType = 1;
         isBGSound = true;
         maxLaserCoolTime = 2f;
@@ -80,9 +79,9 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.gameObject.tag == "BorderPlayer")
+        if (collision.gameObject.tag == "BorderPlayer")
         {
-            switch(collision.gameObject.name)
+            switch (collision.gameObject.name)
             {
                 case "Top":
                     isTouchTop = true;
@@ -101,6 +100,105 @@ public class Player : MonoBehaviour
                     break;
             }
         }
+        // Shield가 켜진 상태로 적과 총알에 맞은 경우
+        else if (isShield && (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet"))
+        {
+            Enemy enemyCode = GetComponent<Enemy>();
+            GameManager.GameScoreUp(enemyCode.enemyScore);
+            Destroy(collision.gameObject);
+        }
+        // Shield가 꺼진 상태로 적과 총알에 맞은 경우
+        else if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
+        {
+            gameObject.SetActive(false);
+            objectManager.deadPlayerSound.Play();
+            GameObject eff = Instantiate(objectManager.deadPlayerEffect, transform.position, transform.rotation);
+            Destroy(eff, 1.5f);
+
+            // Power 1 감소
+            if (power > 1) power--;
+
+            // 생성된 적 모두 소멸
+            GameObject[] enemyDes = GameObject.FindGameObjectsWithTag("Enemy");
+            for (int i = 0; i < enemyDes.Length; i++)
+                Destroy(enemyDes[i]);
+            // 생성된 적의 총알 모두 소멸
+/*            GameObject[] enemyBulletDes = GameObject.FindGameObjectsWithTag("EnemyBullet");
+            for (int i = 0; i < enemyBulletDes.Length; i++)
+                Destroy(enemyBulletDes[i]);
+*/
+            Debug.Log("Life 전");
+            life--;
+            gameManager.PlayerLifeSet(life);
+            Debug.Log("Life 후");
+
+            if (life <= 0)
+                gameManager.GameOver();
+            else
+                Invoke("ReloadPlayer", 2f);
+
+        }
+        // Power(파워) 아이템을 먹은 경우
+        else if (collision.gameObject.tag == "ItemPower")
+        {
+            power++;
+            objectManager.itmePowerSound.Play();
+            Destroy(collision.gameObject);
+
+            if (power > 3)
+            {
+                power = 3;
+                GameManager.GameScoreUp(500);
+            }
+        }
+        // Life(생명) 아이템을 먹은 경우
+        else if (collision.gameObject.tag == "ItemLife")
+        {
+            life++;
+            objectManager.itmeLifeSound.Play();
+            Destroy(collision.gameObject);
+
+            if (life > 3)
+            {
+                life = 3;
+                GameManager.GameScoreUp(500);
+            }
+            else
+            {
+                gameManager.PlayerLifeSet(life);
+            }
+        }
+        // Shield(쉴드) 아이템을 먹은 경우
+        else if (collision.gameObject.tag == "ItemShield")
+        {
+            objectManager.itmeShieldSound.Play();
+            Destroy(collision.gameObject);
+
+            if (isShield)
+            {
+                GameManager.GameScoreUp(500);
+            }
+            else
+            {
+                ShieldShow();
+            }
+        }
+        // Boom(폭탄) 아이템을 먹은 경우
+        else if (collision.gameObject.tag == "ItemBoom")
+        {
+            objectManager.itmeShieldSound.Play();
+            Destroy(collision.gameObject);
+
+            if (isShield)
+            {
+                GameManager.GameScoreUp(500);
+            }
+            else
+            {
+                BoomShow();
+            }
+        }
+
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -128,55 +226,6 @@ public class Player : MonoBehaviour
         }
     }
 
-
-    // 레이저 쿨타임
-    void LaserPowerCheck()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && !isLaserShoot)
-        {
-            isClickedSpace = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.Space) || isLaserShoot)
-        {
-            isClickedSpace = false;
-            if(curLaserCoolTime > maxLaserCoolTime)
-            {
-                LaserShoot();
-            }
-            curLaserCoolTime = 0f;
-        }
-
-        if (isClickedSpace)
-        {
-            curLaserCoolTime += Time.deltaTime;
-        }
-    }
-
-
-    // 레이저 발사
-    void LaserShoot()
-    {
-        isLaserShoot = true;
-        //laser.transform.localPosition = new Vector3(0, 0.7f, 0);
-        //laser.transform.localScale = new Vector3(1, 0.1f, 1);
-
-        LaserShow();
-        Invoke("LaserHide", 5f);
-
-        /*
-                for (int i = 0; i < 15; )
-                {
-                     if(curLaserTime < maxLaserTime)
-                    {
-                         laser.transform.localPosition += new Vector3(0, 0.1f, 0);
-                         laser.transform.localScale = transform.localScale + transform.localScale * 0.1f;
-                         i++;
-                        curLaserTime = 0;
-                    }
-                }
-                curLaserCoolTime = 0;
-        */
-    }
 
 
     void BulletShoot()
@@ -325,23 +374,24 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S)) ShieldHotKey();
         if (Input.GetKeyDown(KeyCode.F9)) ShieldShow();
         if (Input.GetKeyDown(KeyCode.F10)) BGSoundOnOff();
-
-
-
     }
 
     // 단축키 'B'로 폭탄 켜고/끄기
     void BoomShow()
     {
         objectManager.boomPlayerSound.Play();
-        boomEffect.SetActive(true);
-        Invoke("BoomHide", 1.3f);
-    }
-    void BoomHide()
-    {
-        boomEffect.SetActive(false);
-    }
+        GameObject boom = Instantiate(objectManager.boomEffect, transform.position + Vector3.up * 4f, transform.rotation);
+        Destroy(boom, 1.5f);
 
+        // 생성된 적 모두 소멸
+        GameObject[] enemyDes = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < enemyDes.Length; i++)
+            Destroy(enemyDes[i]);
+        // 생성된 적의 총알 모두 소멸
+/*        GameObject[] enemyBulletDes = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        for (int i = 0; i < enemyBulletDes.Length; i++)
+            Destroy(enemyBulletDes[i]);*/
+    }
 
     // 단축키 'S'로 쉴드 켜고/끄기
     void ShieldHotKey()
@@ -367,6 +417,37 @@ public class Player : MonoBehaviour
     void ShieldHide()
     {
         shield.SetActive(false);
+    }
+
+
+    // 레이저 쿨타임
+    void LaserPowerCheck()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && !isLaserShoot)
+        {
+            isClickedSpace = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.Space) || isLaserShoot)
+        {
+            isClickedSpace = false;
+            if (curLaserCoolTime > maxLaserCoolTime)
+            {
+                LaserShoot();
+            }
+            curLaserCoolTime = 0f;
+        }
+
+        if (isClickedSpace)
+        {
+            curLaserCoolTime += Time.deltaTime;
+        }
+    }
+
+    // 레이저 발사
+    void LaserShoot()
+    {
+        LaserShow();
+        Invoke("LaserHide", 5f);
     }
 
     // 레이저 발사
@@ -396,6 +477,12 @@ public class Player : MonoBehaviour
         }
     }
 
+    // 플레이어 다시 나타나게 하기
+    void ReloadPlayer()
+    {
+        transform.position = new Vector3(0, -4, 0);
+        gameObject.SetActive(true);
+    }
 
 
 }

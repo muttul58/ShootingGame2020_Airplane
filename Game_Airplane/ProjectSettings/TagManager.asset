@@ -11,6 +11,11 @@ TagManager:
   - Shield
   - BorderEnemy
   - Laser
+  - ItemBoom
+  - ItemPower
+  - Item
+  - ItemLife
+  - ItemShield
   layers:
   - Default
   - TransparentFX

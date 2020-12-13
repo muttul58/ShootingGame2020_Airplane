@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,17 +11,20 @@ public class GameManager : MonoBehaviour
     public float curSpawnTime;
     public static int gameScore;
 
+    public bool isGameOver;
+
+    public GameObject player;
+    public GameObject gameOverSet;
+    public GameObject gmaeStart;
+
+    public Image[] lifeImages;
+    public Text gameScoreText;
 
     public ObjectManager objectManager;
 
-
-    void Start()
-    {
-        
-    }
-
     void Update()
     {
+        gameScoreText.text = string.Format("{0:n0}", gameScore);
         EnemySpawn();
         ReSpawn();
     }
@@ -45,9 +49,41 @@ public class GameManager : MonoBehaviour
 
         curSpawnTime = 0;
     }
-
+    
+    // 적 생성 시간 계산용
     void ReSpawn()
     {
         curSpawnTime += Time.deltaTime;
     }
+
+    public void PlayerLifeSet(int life)
+    {
+        Debug.Log("Life 처리");
+        for (int i = 0; i< 3; i++)
+            lifeImages[i].color = new Color(1, 1, 1, 0);
+
+        for (int i = 0; i < life; i++)
+            lifeImages[i].color = new Color(1, 1, 1, 1);
+    }
+
+    // 게임 점수 계산
+    public static void GameScoreUp(int score)
+    {
+        gameScore += score;
+    }
+
+    public void GameStart()
+    {
+
+    }
+
+
+    public void GameOver()
+    {
+        isGameOver = true;
+        gameOverSet.SetActive(true);
+    }
+
+
+
 }

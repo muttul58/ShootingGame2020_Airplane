@@ -17,7 +17,10 @@ public class ObjectManager : MonoBehaviour
 
     public GameObject[] deadEnemyEffect;
     public GameObject deadPlayerEffect;
-
+    public GameObject boomEffect;
+    
+    // 0: Life,  1: Shield,  2: Power,  3: Boom
+    public GameObject[] itemObjs;
 
     public AudioSource backgroundSound;
     public AudioSource bulletShootSound;

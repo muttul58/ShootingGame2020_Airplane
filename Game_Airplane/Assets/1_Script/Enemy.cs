@@ -9,13 +9,19 @@ public class Enemy : MonoBehaviour
     public int hp;
     public int enemyScore;
     public string enemyName;
+
+    public Sprite[] sprites; 
+
     public ObjectManager objectManager;
-    //public GameManager gameManager;
+  //public GameManager gameManager;
     public Player player;
-    
+    public SpriteRenderer spriteRenderer;
+
     void Awake()
     {
         objectManager = GameObject.Find("ObjectManager").GetComponent<ObjectManager>();
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
 
         //gameManager = GetComponent<GameManager>();
         player = GetComponent<Player>();
@@ -43,13 +49,23 @@ public class Enemy : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        // 쉴드에 다이면
+        else if(collision.gameObject.tag == "Shield")
+        {
+            Destroy(gameObject);
+            GameManager.gameScore += enemyScore;  // 점수 누적
+            Effect("D");  // Dead Effect
+            ItemDrop();   // 아이템 랜덤 생성
+        }
+
         // 플레이어 총알에 맞으면
         else if(collision.gameObject.tag == "PlayerBullet" || collision.gameObject.tag == "Laser")
         {
             if (hp == 0) return;
             if(collision.gameObject.tag != "Laser")
                 Destroy(collision.gameObject);  // 총알 소멸
-            Effect("H");
+            Effect("H"); // Hit Effect
 
 
             // 총알코드 가져오기
@@ -61,11 +77,26 @@ public class Enemy : MonoBehaviour
             if (hp <= 0)
             {
                 Destroy(gameObject);
-                Effect("D");
-                GameManager.gameScore += enemyScore;
+                GameManager.gameScore += enemyScore;  // 점수 누적
+                Effect("D");  // Dead Effect
+                ItemDrop();   // 아이템 랜덤 생성
                 // Debug.Log("점수 : " + GameManager.gameScore);
             }
         }
+    }
+
+    // 아이템 랜덤 생성
+    void ItemDrop()
+    {
+        int ran = Random.Range(0, 10);
+        int itemIndex = 0;
+        if (ran < 2) return;
+        else if (ran < 4) itemIndex = 0;
+        else if (ran < 6) itemIndex = 1;
+        else if (ran < 8) itemIndex = 2;
+        else itemIndex = 3;
+
+        Instantiate(objectManager.itemObjs[itemIndex], transform.position, transform.rotation);
     }
 
     // 적 파괴 이팩트 
