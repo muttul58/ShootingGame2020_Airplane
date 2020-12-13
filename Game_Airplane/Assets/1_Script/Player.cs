@@ -15,6 +15,8 @@ public class Player : MonoBehaviour
     public float maxBulletShootTime;
     public float curBulletShootTime;
     
+    public float maxLaserCoolTime;
+    public float curLaserCoolTime;
     public float maxLaserTime;
     public float curLaserTime;
 
@@ -25,7 +27,8 @@ public class Player : MonoBehaviour
 
     public bool isBoom;
     public bool isShield;
-    public bool isLaser;
+    public bool isClickedSpace;
+    public bool isLaserShoot;
     public bool isBGSound;
 
     public GameObject boomEffect;
@@ -47,6 +50,7 @@ public class Player : MonoBehaviour
         life = 3;
         bulletType = 1;
         isBGSound = true;
+        maxLaserCoolTime = 2f;
     }
 
     void Update()
@@ -54,9 +58,10 @@ public class Player : MonoBehaviour
         PlayerMove();
         BulletShoot();
         Reload();
+        LaserPowerCheck();
         HotKey();
-        if(laserValue == 3) LaserPower();
     }
+
 
     void PlayerMove()
     {
@@ -124,22 +129,55 @@ public class Player : MonoBehaviour
     }
 
 
-    void LaserPower()
+    // 레이저 쿨타임
+    void LaserPowerCheck()
     {
-        isLaser = true;
-        laserValue = 0;
-        laser.transform.localPosition = new Vector3(0, 0.7f, 0);
-        laser.transform.localScale = new Vector3(1, 0.1f, 1);
-
-        LaserShow();
-
-        for (int i = 0; i < 300000; i++)
+        if (Input.GetKeyDown(KeyCode.Space) && !isLaserShoot)
         {
+            isClickedSpace = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.Space) || isLaserShoot)
+        {
+            isClickedSpace = false;
+            if(curLaserCoolTime > maxLaserCoolTime)
+            {
+                LaserShoot();
+            }
+            curLaserCoolTime = 0f;
+        }
 
-             laser.transform.localPosition += new Vector3(0, 0.00001f, 0);
-             laser.transform.localScale = transform.localScale + transform.localScale * 0.0001f;
+        if (isClickedSpace)
+        {
+            curLaserCoolTime += Time.deltaTime;
         }
     }
+
+
+    // 레이저 발사
+    void LaserShoot()
+    {
+        isLaserShoot = true;
+        //laser.transform.localPosition = new Vector3(0, 0.7f, 0);
+        //laser.transform.localScale = new Vector3(1, 0.1f, 1);
+
+        LaserShow();
+        Invoke("LaserHide", 5f);
+
+        /*
+                for (int i = 0; i < 15; )
+                {
+                     if(curLaserTime < maxLaserTime)
+                    {
+                         laser.transform.localPosition += new Vector3(0, 0.1f, 0);
+                         laser.transform.localScale = transform.localScale + transform.localScale * 0.1f;
+                         i++;
+                        curLaserTime = 0;
+                    }
+                }
+                curLaserCoolTime = 0;
+        */
+    }
+
 
     void BulletShoot()
     {
@@ -150,8 +188,6 @@ public class Player : MonoBehaviour
         // 총알 발사 시간 설정보다 작으면 발사 안됨.
         if (curBulletShootTime < maxBulletShootTime)
             return;
-
-        if(!isLaser) laserValue += 1;
 
         // 총알타입(bulletType)  1: 직선 발사, 2: 점점 퍼지게 발사
         // 파워(power) 1, 2, 3에 따라 총알 형태와 속도 설정
@@ -336,13 +372,12 @@ public class Player : MonoBehaviour
     // 레이저 발사
     void LaserShow()
     {
-        isLaser = true;
+        isLaserShoot = true;
         laser.SetActive(true);
-        Invoke("LaserHide", 5f);
     }
     void LaserHide()
     {
-        isLaser = false;
+        isLaserShoot = false;
         laser.SetActive(false);
     }
 

@@ -35,6 +35,7 @@ public class Enemy : MonoBehaviour
         
     }
 
+    
     void OnTriggerEnter2D(Collider2D collision)
     {
         // 화면 밖으로 나가거나 플레이어에 다으면 소멸
@@ -46,7 +47,8 @@ public class Enemy : MonoBehaviour
         else if(collision.gameObject.tag == "PlayerBullet")
         {
             if (hp == 0) return;
-            Destroy(collision.gameObject);  // 총알 소멸
+            if(collision.gameObject.name != "Laser")
+                Destroy(collision.gameObject);  // 총알 소멸
             Effect("H");
 
 
