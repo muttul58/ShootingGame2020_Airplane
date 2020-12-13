@@ -44,10 +44,10 @@ public class Enemy : MonoBehaviour
             Destroy(gameObject);
         }
         // 플레이어 총알에 맞으면
-        else if(collision.gameObject.tag == "PlayerBullet")
+        else if(collision.gameObject.tag == "PlayerBullet" || collision.gameObject.tag == "Laser")
         {
             if (hp == 0) return;
-            if(collision.gameObject.name != "Laser")
+            if(collision.gameObject.tag != "Laser")
                 Destroy(collision.gameObject);  // 총알 소멸
             Effect("H");
 
