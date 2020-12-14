@@ -16,6 +16,7 @@ TagManager:
   - Item
   - ItemLife
   - ItemShield
+  - BoomEffect
   layers:
   - Default
   - TransparentFX

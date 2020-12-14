@@ -9,8 +9,11 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "BorderPlayer" && collision.gameObject.name == "Laser")
+        if (collision.gameObject.tag == "BorderPlayer")
+        {
+            if (gameObject.tag != "Laser")
             Destroy(gameObject);
+        }
 
         else if (collision.gameObject.tag == "Boom")
             Destroy(gameObject);

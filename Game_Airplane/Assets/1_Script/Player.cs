@@ -7,8 +7,8 @@ public class Player : MonoBehaviour
     public float speed;
     public float bulletSpeed;
 
-    public int power;
-    public int life;
+    public static int power;
+    public static int life;
     public int bulletType;
     public int laserValue;
 
@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
     {
         speed = 5;
         power = 1;
-        //life = 3;
+        life = 3;
         bulletType = 1;
         isBGSound = true;
         maxLaserCoolTime = 2f;
@@ -127,10 +127,8 @@ public class Player : MonoBehaviour
             for (int i = 0; i < enemyBulletDes.Length; i++)
                 Destroy(enemyBulletDes[i]);
 */
-            Debug.Log("Life 전");
             life--;
             gameManager.PlayerLifeSet(life);
-            Debug.Log("Life 후");
 
             if (life <= 0)
                 gameManager.GameOver();
@@ -463,7 +461,7 @@ public class Player : MonoBehaviour
     }
 
     // 단축키 F10 으로 배경음악 켜고/끄기
-    void BGSoundOnOff()
+    public void BGSoundOnOff()
     {
         if (isBGSound)
         {

@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject player;
     public GameObject gameOverSet;
-    public GameObject gmaeStart;
+    public GameObject gameStart;
 
     public Image[] lifeImages;
     public Text gameScoreText;
@@ -31,6 +31,9 @@ public class GameManager : MonoBehaviour
 
     void EnemySpawn()
     {
+
+        if (isGameOver)
+            return;
         if (curSpawnTime < maxSpawnTime)
             return;
 
@@ -58,7 +61,6 @@ public class GameManager : MonoBehaviour
 
     public void PlayerLifeSet(int life)
     {
-        Debug.Log("Life 처리");
         for (int i = 0; i< 3; i++)
             lifeImages[i].color = new Color(1, 1, 1, 0);
 
@@ -72,12 +74,36 @@ public class GameManager : MonoBehaviour
         gameScore += score;
     }
 
+    // 게임 시작 또는 다시 시작
     public void GameStart()
     {
-
+        gameScore = 0;
+        GameSetting();
     }
 
+    // 게임 이어하기
+    public void GameContinue()
+    {
+        GameSetting();
+    }
 
+    // 게임 시작 초기 설정
+    void GameSetting()
+    {
+        Player.life = 3;
+        Player.power = 1;
+        isGameOver = false;
+        gameStart.SetActive(false);
+        PlayerLifeSet(3);
+
+        player.transform.position = new Vector3(0, -4, 0);
+        player.SetActive(true);
+
+        if (gameOverSet.activeSelf == true)
+            gameOverSet.SetActive(false);
+    }
+
+    // 게임 종료 화면 표시
     public void GameOver()
     {
         isGameOver = true;
