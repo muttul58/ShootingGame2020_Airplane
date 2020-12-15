@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -10,12 +11,21 @@ public class Enemy : MonoBehaviour
     public int enemyScore;
     public string enemyName;
 
+    public Slider HPbar;
+    public Slider HpBar_Basic;
+
     public Sprite[] sprites; 
 
     public ObjectManager objectManager;
   //public GameManager gameManager;
     public Player player;
     public SpriteRenderer spriteRenderer;
+
+    bool isLaserHit;
+    public float laserDelay;
+
+
+    Bullet bulletCode;
 
     void Awake()
     {
@@ -28,32 +38,67 @@ public class Enemy : MonoBehaviour
 
         Rigidbody2D rigid = GetComponent<Rigidbody2D>();
         rigid.velocity = Vector3.down * speed;
-
+        
     }
 
     void Start()
     {
-        
+        HPbar = Instantiate(HpBar_Basic) as Slider;
+        HPbar.transform.SetParent(GameObject.Find("EnemyHpBar_Canvas").transform);
+        HPbar.transform.SetAsFirstSibling();
+        HPbar.transform.localScale = new Vector3(0.0065f, 0.02f, 0);
+        HPbar.transform.localRotation = Quaternion.Euler(0, 0, 0);
+
+        HPbar.maxValue = hp;
     }
 
     void Update()
     {
-        
+        HpBar_Setting();
+        HPbar_SetActive();
     }
 
-    
+
+    // 적 HpBar 초기화
+    void HpBar_Setting()
+    {
+        float pos = 0;
+
+        if (enemyName == "L") pos = 1.3f;
+        else if (enemyName == "M") pos = 1f;
+        else if (enemyName == "S") pos = 0.7f;
+
+        HPbar.value = hp;
+        HPbar.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + pos, gameObject.transform.position.z);
+    }
+
+    // 멀리있는 적의 HPbar 안보기게 하기
+    void HPbar_SetActive()
+    {
+        Collider2D[] hitCol = Physics2D.OverlapCircleAll(gameObject.transform.position, 6f);
+        HPbar.gameObject.SetActive(false);
+
+        for(int i = 0; i< hitCol.Length; i++)
+        {
+            if (hitCol[i].gameObject.name == "Player")
+                HPbar.gameObject.SetActive(true);
+        }
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         // 화면 밖으로 나가거나 플레이어에 다으면 소멸
         if(collision.gameObject.tag == "BorderEnemy" || collision.gameObject.tag == "Player")
         {
             Destroy(gameObject);
+            Destroy(HPbar.gameObject);
         }
 
         // 쉴드에 다이면
         else if(collision.gameObject.tag == "Shield")
         {
             Destroy(gameObject);
+            Destroy(HPbar.gameObject);
             GameManager.gameScore += enemyScore;  // 점수 누적
             Effect("D");  // Dead Effect
             ItemDrop();   // 아이템 랜덤 생성
@@ -69,19 +114,71 @@ public class Enemy : MonoBehaviour
 
 
             // 총알코드 가져오기
-            Bullet bulletCode = collision.gameObject.GetComponent<Bullet>();
+            bulletCode = collision.gameObject.GetComponent<Bullet>();
 
             hp -= bulletCode.dmg;
+            spriteRenderer.sprite = sprites[1];
+            Invoke("EnemySpriteSwap", 0.1f);
 
             // Debug.Log("hp : " + hp);
             if (hp <= 0)
             {
                 Destroy(gameObject);
+                Destroy(HPbar.gameObject);
                 GameManager.gameScore += enemyScore;  // 점수 누적
                 Effect("D");  // Dead Effect
                 ItemDrop();   // 아이템 랜덤 생성
                 // Debug.Log("점수 : " + GameManager.gameScore);
             }
+        }
+    }
+
+    // 레이저가 적에게 충돌 상태이면
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Laser")
+        {
+            isLaserHit = true;
+
+            if (laserDelay <= 0)
+            {
+                hp -= bulletCode.dmg;
+
+                spriteRenderer.sprite = sprites[1];
+                Invoke("EnemySpriteSwap", 0.1f);
+
+                Effect("H"); // Hit Effect
+                laserDelay = 0.1f;
+            }
+            else
+            {
+                laserDelay -= Time.deltaTime;
+            }
+
+            if (hp <= 0)
+            {
+                Destroy(gameObject);
+                Destroy(HPbar.gameObject);
+                GameManager.gameScore += enemyScore;  // 점수 누적
+                Effect("D");  // Dead Effect
+                ItemDrop();   // 아이템 랜덤 생성
+                              // Debug.Log("점수 : " + GameManager.gameScore);
+            }
+        }
+    }
+
+    void EnemySpriteSwap()
+    {
+        spriteRenderer.sprite = sprites[0];
+    }
+
+    // 레이저가 적에게 떯어진 상태이면
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.tag == "Laser")
+        {
+            isLaserHit = false;
+            laserDelay = 0.1f;
         }
     }
 

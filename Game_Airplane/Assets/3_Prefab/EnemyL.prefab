@@ -50,6 +50,9 @@ MonoBehaviour:
   hp: 50
   enemyScore: 500
   enemyName: L
+  HPbar: {fileID: 0}
+  HpBar_Basic: {fileID: 8211063080286452419, guid: d221392b4b5c71443844de14716d4064,
+    type: 3}
   sprites:
   - {fileID: 21300000, guid: 62b0ef17930ac1b40b86a245ae2639c3, type: 3}
   - {fileID: 21300000, guid: c3e7770dfa29e474599647a79db9b86c, type: 3}

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -31,6 +32,8 @@ public class Player : MonoBehaviour
     public bool isLaserShoot;
     public bool isBGSound;
 
+    public Slider hpSlider;  // 레이저 모으는 게이지 표시
+
     public GameObject shield;
     public GameObject laser;
 
@@ -54,6 +57,13 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        // 레이저 슬라이드 초기화
+        hpSlider.maxValue = 3f;
+        hpSlider.value = curLaserCoolTime;
+
+
+
+
         PlayerMove();
         BulletShoot();
         Reload();
@@ -122,11 +132,14 @@ public class Player : MonoBehaviour
             GameObject[] enemyDes = GameObject.FindGameObjectsWithTag("Enemy");
             for (int i = 0; i < enemyDes.Length; i++)
                 Destroy(enemyDes[i]);
+
+
             // 생성된 적의 총알 모두 소멸
-/*            GameObject[] enemyBulletDes = GameObject.FindGameObjectsWithTag("EnemyBullet");
-            for (int i = 0; i < enemyBulletDes.Length; i++)
-                Destroy(enemyBulletDes[i]);
-*/
+            /*            GameObject[] enemyBulletDes = GameObject.FindGameObjectsWithTag("EnemyBullet");
+                        for (int i = 0; i < enemyBulletDes.Length; i++)
+                            Destroy(enemyBulletDes[i]);
+            */
+
             life--;
             gameManager.PlayerLifeSet(life);
 
@@ -451,6 +464,7 @@ public class Player : MonoBehaviour
     // 레이저 발사
     void LaserShow()
     {
+        objectManager.itmeShieldSound.Play();
         isLaserShoot = true;
         laser.SetActive(true);
     }

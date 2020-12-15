@@ -17,6 +17,7 @@ TagManager:
   - ItemLife
   - ItemShield
   - BoomEffect
+  - EnemyHpBar
   layers:
   - Default
   - TransparentFX
@@ -53,4 +54,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: AboveObject
+    uniqueID: 4035963415
     locked: 0
