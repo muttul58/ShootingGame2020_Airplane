@@ -61,9 +61,6 @@ public class Player : MonoBehaviour
         hpSlider.maxValue = 3f;
         hpSlider.value = curLaserCoolTime;
 
-
-
-
         PlayerMove();
         BulletShoot();
         Reload();
@@ -464,7 +461,7 @@ public class Player : MonoBehaviour
     // 레이저 발사
     void LaserShow()
     {
-        objectManager.itmeShieldSound.Play();
+        objectManager.itmeShieldSound.Play(); // 레이저 나타날 때 사운드 효과
         isLaserShoot = true;
         laser.SetActive(true);
     }
