@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     public bool isTouchRight;
     public bool isTouchLeft;
 
+    //public static bool isPlayerDead;
     public bool isBoom;
     public bool isShield;
     public bool isClickedSpace;
@@ -110,13 +111,16 @@ public class Player : MonoBehaviour
         // Shield가 켜진 상태로 적과 총알에 맞은 경우
         else if (isShield && (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet"))
         {
+            Destroy(collision.gameObject);
             Enemy enemyCode = GetComponent<Enemy>();
             GameManager.GameScoreUp(enemyCode.enemyScore);
-            Destroy(collision.gameObject);
         }
         // Shield가 꺼진 상태로 적과 총알에 맞은 경우
         else if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
+            //isPlayerDead = true;    // Player 사망
+            laser.SetActive(false); // Player 가 죽으면 Laser도 안보이게 설정
+
             gameObject.SetActive(false);
             objectManager.deadPlayerSound.Play();
             GameObject eff = Instantiate(objectManager.deadPlayerEffect, transform.position, transform.rotation);
@@ -125,17 +129,7 @@ public class Player : MonoBehaviour
             // Power 1 감소
             if (power > 1) power--;
 
-            // 생성된 적 모두 소멸
-            GameObject[] enemyDes = GameObject.FindGameObjectsWithTag("Enemy");
-            for (int i = 0; i < enemyDes.Length; i++)
-                Destroy(enemyDes[i]);
-
-
-            // 생성된 적의 총알 모두 소멸
-            /*            GameObject[] enemyBulletDes = GameObject.FindGameObjectsWithTag("EnemyBullet");
-                        for (int i = 0; i < enemyBulletDes.Length; i++)
-                            Destroy(enemyBulletDes[i]);
-            */
+            BulletDestroy(); // 생성된 적과 적의 총알 모두 소멸
 
             life--;
             gameManager.PlayerLifeSet(life);
@@ -390,15 +384,19 @@ public class Player : MonoBehaviour
         objectManager.boomPlayerSound.Play();
         GameObject boom = Instantiate(objectManager.boomEffect, transform.position + Vector3.up * 4f, transform.rotation);
         Destroy(boom, 1.5f);
+        BulletDestroy(); // 생성된 적과 적의 총알 모두 소멸
+    }
 
+    void BulletDestroy()
+    {
         // 생성된 적 모두 소멸
         GameObject[] enemyDes = GameObject.FindGameObjectsWithTag("Enemy");
         for (int i = 0; i < enemyDes.Length; i++)
             Destroy(enemyDes[i]);
         // 생성된 적의 총알 모두 소멸
-/*        GameObject[] enemyBulletDes = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        GameObject[] enemyBulletDes = GameObject.FindGameObjectsWithTag("EnemyBullet");
         for (int i = 0; i < enemyBulletDes.Length; i++)
-            Destroy(enemyBulletDes[i]);*/
+            Destroy(enemyBulletDes[i]);
     }
 
     // 단축키 'S'로 쉴드 켜고/끄기
@@ -491,6 +489,7 @@ public class Player : MonoBehaviour
     {
         transform.position = new Vector3(0, -4, 0);
         gameObject.SetActive(true);
+        //isPlayerDead = false;
     }
 
 

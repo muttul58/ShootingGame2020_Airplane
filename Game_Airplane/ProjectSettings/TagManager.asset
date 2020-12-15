@@ -18,6 +18,7 @@ TagManager:
   - ItemShield
   - BoomEffect
   - EnemyHpBar
+  - EnemyBullet
   layers:
   - Default
   - TransparentFX

@@ -9,9 +9,10 @@ public class ObjectManager : MonoBehaviour
     public GameObject playerBulletObjL;
     public GameObject playerBoomObj;
 
-    public GameObject enemyBulletObjA;
+    public GameObject enemyBulletObjL;
+    public GameObject enemyBulletObjM;
+    public GameObject enemyBulletObjS;
     public GameObject enemyBulletObjB;
-    public GameObject enemyBulletObjC;
 
     public GameObject[] enemyObj;
 

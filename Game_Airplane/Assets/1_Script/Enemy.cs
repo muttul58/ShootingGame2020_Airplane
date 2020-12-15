@@ -11,18 +11,23 @@ public class Enemy : MonoBehaviour
     public int enemyScore;
     public string enemyName;
 
-    public Slider HPbar;
-    public Slider HpBar_Basic;
+    public float maxShootTime;
+    public float curShootTime;
 
-    public Sprite[] sprites; 
 
+    // HPbar 표시에 사용
+    public Slider HPbar;  // 생성된 HPbar
+    public Slider HpBar_Basic;  // 프리팹으로 할당 한 HpBar
+
+    public Sprite[] sprites;    // 플레이어 총알에 맞는 효과용
+
+    public bool isLaserHit;     // 플레이어 Laser에 맞은 것 확인
+    public float laserDelay;    // Laser에 맞으면 Delay 시간 마다 HP 감소
+
+    public GameObject player;
     public ObjectManager objectManager;
-  //public GameManager gameManager;
-    public Player player;
     public SpriteRenderer spriteRenderer;
 
-    bool isLaserHit;
-    public float laserDelay;
 
 
     Bullet bulletCode;
@@ -33,8 +38,7 @@ public class Enemy : MonoBehaviour
 
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        //gameManager = GetComponent<GameManager>();
-        player = GetComponent<Player>();
+        player = GameObject.FindWithTag("Player");
 
         Rigidbody2D rigid = GetComponent<Rigidbody2D>();
         rigid.velocity = Vector3.down * speed;
@@ -50,14 +54,51 @@ public class Enemy : MonoBehaviour
         HPbar.transform.localRotation = Quaternion.Euler(0, 0, 0);
 
         HPbar.maxValue = hp;
+
     }
 
     void Update()
     {
+        BulletShoot();
+        ReloadShoot();
+
         HpBar_Setting();
         HPbar_SetActive();
     }
 
+
+    void BulletShoot()
+    {
+        if (player.gameObject.activeSelf == false)
+            return;
+        if (curShootTime < maxShootTime)
+            return;
+
+        if(enemyName == "S" || enemyName == "M")
+        {
+            //string bulletName =  enemyBulletObjS;
+            GameObject bulletS = Instantiate(objectManager.enemyBulletObjS, transform.position, transform.rotation);
+            Rigidbody2D rigidS = bulletS.gameObject.GetComponent<Rigidbody2D>();
+            Vector3 playerPos = player.transform.position - transform.position;
+            rigidS.AddForce(playerPos.normalized * 2, ForceMode2D.Impulse);
+        }
+        else if (enemyName == "L")
+        {
+            //string bulletName =  enemyBulletObjS;
+            GameObject bulletL = Instantiate(objectManager.enemyBulletObjL, transform.position, transform.rotation);
+            Rigidbody2D rigidL = bulletL.gameObject.GetComponent<Rigidbody2D>();
+            Vector3 playerPos = player.transform.position - transform.position;
+            rigidL.AddForce(playerPos.normalized * 2, ForceMode2D.Impulse);
+        }
+
+        maxShootTime = Random.Range(2.0f, 3.0f);
+        curShootTime = 0;
+    }
+
+    void ReloadShoot()
+    {
+        curShootTime += Time.deltaTime;
+    }
 
     // 적 HpBar 초기화
     void HpBar_Setting()
