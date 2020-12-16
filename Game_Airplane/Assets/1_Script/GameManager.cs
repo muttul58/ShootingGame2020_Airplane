@@ -22,6 +22,14 @@ public class GameManager : MonoBehaviour
 
     public ObjectManager objectManager;
 
+
+    private void Start()
+    {
+
+        Vector3 ops = new Vector3(0, 2.5f, 0);
+        Instantiate(objectManager.enemyObj[3], ops, transform.rotation);
+    }
+
     void Update()
     {
         gameScoreText.text = string.Format("{0:n0}", gameScore);

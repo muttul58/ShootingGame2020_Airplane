@@ -15,10 +15,9 @@ public class EnemyBoos : MonoBehaviour
     public float maxShootTime;
     public float curShootTime;
 
-
     // HPbar 표시에 사용
-
-    public Sprite[] sprites;    // 플레이어 총알에 맞는 효과용
+    public Slider HPbar;  // 생성된 HPbar
+    public Slider HpBar_Basic;  // 프리팹으로 할당 한 HpBar
 
     public bool isLaserHit;     // 플레이어 Laser에 맞은 것 확인
     public float laserDelay;    // Laser에 맞으면 Delay 시간 마다 HP 감소
@@ -38,61 +37,67 @@ public class EnemyBoos : MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
 
-        Rigidbody2D rigid = GetComponent<Rigidbody2D>();
-        rigid.velocity = Vector3.down * speed;
+/*        Rigidbody2D rigid = GetComponent<Rigidbody2D>();
+        rigid.velocity = Vector3.down * speed;*/
 
         animator = GetComponent<Animator>();
-        
+
+
     }
 
     void Start()
     {
+        HPbar = Instantiate(HpBar_Basic) as Slider;
+        HPbar.transform.SetParent(GameObject.Find("EnemyHpBar_Canvas").transform);
+        HPbar.transform.SetAsFirstSibling();
+        HPbar.transform.localScale = new Vector3(0.01f, 0.02f, 0);
+        HPbar.transform.localRotation = Quaternion.Euler(0, 0, 0);
+        HPbar.tag = "EnemyBoosHPbar";
+        HPbar.maxValue = hp;
+
+
+        
     }
 
     void Update()
     {
+        HpBar_Setting();
     }
 
-    void OnHit()
+    // 적 HpBar 초기화
+    void HpBar_Setting()
     {
-        
-
+        HPbar.value = hp;
+        HPbar.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 1.8f, gameObject.transform.position.z);
     }
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (hp == 0) return;
+        if (hp <= 0) return;
 
-        // 플레이어 총알에 맞으면
-        animator.SetTrigger("OnHit");
-        Effect("H"); // Hit Effect
-
-        switch (collision.gameObject.tag)
+        if (collision.gameObject.tag == "PlayerBullet" || collision.gameObject.tag == "Laser")
         {
-            case "Player":
-                hitDmg = 50;
-                break;
-            case "Shield":
-                hitDmg = 100;
-                break;
-            case "PlayerBullet":
+            // 플레이어 총알에 맞으면
+            animator.SetTrigger("OnHit");
+            Effect("H"); // Hit Effect
+
+            if (collision.gameObject.tag == "PlayerBullet")
+            {
                 Destroy(collision.gameObject);
+            }
                 bulletCode = collision.gameObject.GetComponent<Bullet>();
                 hitDmg = bulletCode.dmg;
-                break;
-            case "Laser":
-                bulletCode = collision.gameObject.GetComponent<Bullet>();
-                hitDmg = bulletCode.dmg;
-                break;
+                hp -= hitDmg;
         }
 
-        hp -= hitDmg;
                 
         // Debug.Log("hp : " + hp);
         if (hp <= 0)
         {
             Effect("D");  // Dead Effect
+            Destroy(HPbar.gameObject);
             Destroy(gameObject);
+
             GameManager.gameScore += enemyScore;  // 점수 누적
             ItemDrop();   // 아이템 랜덤 생성
             // Debug.Log("점수 : " + GameManager.gameScore);
@@ -111,9 +116,6 @@ public class EnemyBoos : MonoBehaviour
             {
                 hp -= bulletCode.dmg;
 
-                //spriteRenderer.sprite = sprites[1];
-                //Invoke("EnemySpriteSwap", 0.1f);
-
                 Effect("H"); // Hit Effect
                 laserDelay = 0.1f;
             }
@@ -124,6 +126,7 @@ public class EnemyBoos : MonoBehaviour
 
             if (hp <= 0)
             {
+                Destroy(HPbar.gameObject);
                 Destroy(gameObject);
                 GameManager.gameScore += enemyScore;  // 점수 누적
                 Effect("D");  // Dead Effect
@@ -177,7 +180,7 @@ public class EnemyBoos : MonoBehaviour
         objectManager.deadEnemySound.Play();  // 파괴 소리 재생
         // 파괴 이팩트 
         GameObject deadEff = Instantiate(objectManager.deadEnemyEffect[index], transform.position, transform.rotation);
-        
+        deadEff.transform.localScale = new Vector3(3f, 3f, 0);
         Destroy(deadEff, desTime);  // 1.5초 후 파괴 이팩트 소멸
     }
 
