@@ -108,12 +108,18 @@ public class Player : MonoBehaviour
                     break;
             }
         }
+        // Shield가 켜진 상태로 보스에 다으면
+        else if (isShield && (collision.gameObject.tag == "EnemyB"))
+        {
+            Destroy(collision.gameObject);
+            GameManager.GameScoreUp(100);
+        }
+
         // Shield가 켜진 상태로 적과 총알에 맞은 경우
         else if (isShield && (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet"))
         {
             Destroy(collision.gameObject);
-            Enemy enemyCode = GetComponent<Enemy>();
-            GameManager.GameScoreUp(enemyCode.enemyScore);
+            GameManager.GameScoreUp(100);
         }
         // Shield가 꺼진 상태로 적과 총알에 맞은 경우
         else if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")

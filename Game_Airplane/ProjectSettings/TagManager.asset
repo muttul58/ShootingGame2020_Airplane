@@ -19,6 +19,7 @@ TagManager:
   - BoomEffect
   - EnemyHpBar
   - EnemyBullet
+  - EnemyB
   layers:
   - Default
   - TransparentFX

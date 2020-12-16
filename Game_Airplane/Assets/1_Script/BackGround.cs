@@ -15,8 +15,8 @@ public class BackGround : MonoBehaviour
 
     private void Update()
     {
-        if(bgName == "Land") pos = 14;
-        else pos = Random.Range(30, 50);
+        if(bgName == "Land") pos = 19;
+        else pos = Random.Range(40, 60);
         
         Vector3 curPos = transform.position;
         Vector3 nextPos = Vector3.down * speed * Time.deltaTime;
