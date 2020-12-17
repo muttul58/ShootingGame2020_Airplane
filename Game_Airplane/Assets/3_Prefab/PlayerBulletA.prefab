@@ -48,6 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dmg: 1
   speed: 2
+  isRotate: 0
 --- !u!212 &8840301982538834211
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -42,9 +42,6 @@ public class Enemy : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         player = GameObject.FindWithTag("Player");
-        //playerCode = player.GetComponent<Player>(); // active == false -> 이순간에 잠깐 생성된 애들이 못 가지고 옴.
-
-        Debug.Log("player 가져왔는지 확인" + player.name); // 가끔 플레이어를 못가지고 오는 몬스터가 생김.
 
         Rigidbody2D rigid = GetComponent<Rigidbody2D>();
         rigid.velocity = Vector3.down * speed;
@@ -117,7 +114,9 @@ public class Enemy : MonoBehaviour
         else if (enemyName == "S") pos = 0.7f;
 
         HPbar.value = hp;
-        HPbar.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + pos, gameObject.transform.position.z);
+        HPbar.transform.position = new Vector3( gameObject.transform.position.x, 
+                                                gameObject.transform.position.y + pos, 
+                                                gameObject.transform.position.z );
     }
 
     // 멀리있는 적의 HPbar 안보기게 하기

@@ -47,13 +47,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee4d7c9cbf18edb418389e1b5136b930, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1.5
-  hp: 100
+  speed: 2.6
+  hp: 1000
   hitDmg: 50
   enemyScore: 10000
   enemyName: B
   maxShootTime: 0
   curShootTime: 0
+  patternIndex: -1
+  curPatternCount: 0
+  maxPatternCount: 0500000003000000630000000a000000
   HPbar: {fileID: 0}
   HpBar_Basic: {fileID: 8211063080286452419, guid: 8e9360430afe0874dad5c4a40a5807ec,
     type: 3}
@@ -104,7 +107,7 @@ SpriteRenderer:
   m_Sprite: {fileID: 21300000, guid: 0da22699f0e81474589f68493c33ece7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
-  m_FlipY: 0
+  m_FlipY: 1
   m_DrawMode: 0
   m_Size: {x: 2.02, y: 2.02}
   m_AdaptiveModeThreshold: 0.5

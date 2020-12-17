@@ -15,6 +15,14 @@ public class EnemyBoos : MonoBehaviour
     public float maxShootTime;
     public float curShootTime;
 
+
+    float bulletSpeed;
+    public int patternIndex;
+    public int curPatternCount;
+    public int[] maxPatternCount;
+
+
+
     // HPbar 표시에 사용
     public Slider HPbar;  // 생성된 HPbar
     public Slider HpBar_Basic;  // 프리팹으로 할당 한 HpBar
@@ -37,12 +45,10 @@ public class EnemyBoos : MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
 
-/*        Rigidbody2D rigid = GetComponent<Rigidbody2D>();
-        rigid.velocity = Vector3.down * speed;*/
+        Rigidbody2D rigid = GetComponent<Rigidbody2D>();
+        rigid.velocity = Vector3.down * speed;
 
         animator = GetComponent<Animator>();
-
-
     }
 
     void Start()
@@ -55,6 +61,157 @@ public class EnemyBoos : MonoBehaviour
         
         HPbar.maxValue = hp;
 
+        Think();
+    }
+
+    void Think()
+    {
+        patternIndex = patternIndex == 3 ? 0 : patternIndex + 1;
+        curPatternCount = 0;
+
+        switch (patternIndex)
+        {
+            case 0:
+                FireFoward();
+                break;
+            case 1:
+                FireShot();
+                break;
+            case 2:
+                FireArc();
+                break;
+            case 3:
+                FireAround();
+                break;
+        }
+    }
+
+    // 앞으로 4발 발사
+    void FireFoward()
+    {
+
+        bulletSpeed = 6.0f ;
+        float posX;
+
+        if (curPatternCount % 2 == 0)
+            posX = 0.8f;
+        else
+            posX = 0.7f;
+
+        for(int i=0; i<5; i++)
+        {
+            posX -= 0.2f;
+            GameObject bullet_RR = Instantiate(objectManager.enemyBulletObjL, transform.position, transform.rotation);
+            Rigidbody2D rigid_RR = bullet_RR.GetComponent<Rigidbody2D>();
+            rigid_RR.AddForce((Vector2.down + new Vector2(posX,  0))  * bulletSpeed, ForceMode2D.Impulse);
+        }
+
+        curPatternCount++;
+
+        // 패턴 카운터
+        if (curPatternCount <= maxPatternCount[patternIndex])
+            Invoke("FireFoward", 1.5f);
+        else 
+            Invoke("Think", 2.0f);
+    }
+
+    // 플레이어 방향으로 샷건
+    void FireShot()
+    {
+        bulletSpeed = 6.0f;
+        float posX = 0.6f;
+
+        for(int i=0; i < 5; i++)
+        {
+            posX += -0.2f;
+            GameObject bullet = Instantiate(objectManager.enemyBulletObjL, transform.position, transform.rotation);
+            Rigidbody2D rigid = bullet.GetComponent<Rigidbody2D>();
+            Vector2 playerPos = player.transform.position - transform.position;
+            rigid.AddForce((playerPos.normalized + new Vector2(posX, 0)) * bulletSpeed, ForceMode2D.Impulse);
+        }
+
+        curPatternCount++;
+
+        if (curPatternCount < maxPatternCount[patternIndex])
+            Invoke("FireShot", 3.5f);
+        else
+            Invoke("Think", 3f);
+    }
+
+    // 부채모양으로 발사
+    void FireArc()
+    {
+
+        bulletSpeed = 6.0f;
+
+        GameObject bullet = Instantiate(objectManager.enemyBulletObjS, transform.position, transform.rotation);
+        bullet.transform.position = transform.position;
+        bullet.transform.rotation = Quaternion.identity;
+
+        Rigidbody2D rigid = bullet.GetComponent<Rigidbody2D>();
+        //  좌.우로 회전 하며 발사 하기위해 Sin, Con 사용
+        Vector2 dirVec = new Vector2(Mathf.Cos(Mathf.PI * 10 * curPatternCount / maxPatternCount[patternIndex]), -1);
+        rigid.AddForce(dirVec.normalized * bulletSpeed, ForceMode2D.Impulse);
+
+
+        curPatternCount++;
+
+        if (curPatternCount < maxPatternCount[patternIndex])
+            Invoke("FireArc", 0.15f);
+        else
+            Invoke("Think", 6);
+    }
+
+
+    // 원 형태로 전체 공격
+    void FireAround()
+    {
+        // 총알 항상 동일한 위치 발사하는 것을 방지하기 위해 총의 수를 변경
+        int roundNum;
+        if (curPatternCount % 2 == 0)
+            roundNum = 30;
+        else
+            roundNum = 40;
+
+        bulletSpeed = 2f;  // 총알 속도
+
+        for (int index=0; index<roundNum; index++)
+        {
+            GameObject bullet = Instantiate(objectManager.enemyBulletObjB, transform.position, transform.rotation);
+            bullet.transform.position = transform.position;
+            // 총알 방향 초기화
+            bullet.transform.rotation = Quaternion.identity;
+            Rigidbody2D rigid = bullet.GetComponent<Rigidbody2D>();
+            //  좌.우로 회전 하며 발사 하기위해 Sin, Con 사용
+            Vector2 dirVec = new Vector2( Mathf.Cos(Mathf.PI * 2 * index / roundNum)
+                                        , Mathf.Sin(Mathf.PI * 2 * index / roundNum) );
+            rigid.AddForce(dirVec.normalized * bulletSpeed, ForceMode2D.Impulse);
+
+            // 총알 진행방향으로 회전하기
+            Vector3 rotVec = Vector3.forward * 360 * index / roundNum + Vector3.forward * 90;
+            bullet.transform.Rotate(rotVec);
+        }
+
+        curPatternCount++;
+
+        if (curPatternCount < maxPatternCount[patternIndex])
+            Invoke("FireAround", 1f);
+        else
+            Invoke("Think", 3f);
+    }
+
+    // 보스가 활성화 되면 2초 후에 정지
+    private void OnEnable()
+    {
+        Invoke("EnemyBossStop", 1f);    // 보스 이동 정지
+    }
+
+
+    // 내려오던 보스 정지
+    void EnemyBossStop()
+    {
+        Rigidbody2D rigid = GetComponent<Rigidbody2D>();
+        rigid.velocity = Vector2.zero;
     }
 
     void Update()
@@ -66,7 +223,9 @@ public class EnemyBoos : MonoBehaviour
     void HpBar_Setting()
     {
         HPbar.value = hp;
-        HPbar.transform.position = new Vector3(gameObject.transform.position.x, gameObject.transform.position.y + 1.8f, gameObject.transform.position.z);
+        HPbar.transform.position = new Vector3( gameObject.transform.position.x, 
+                                                gameObject.transform.position.y + 1.8f, 
+                                                gameObject.transform.position.z );
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -147,15 +306,26 @@ public class EnemyBoos : MonoBehaviour
     // 아이템 랜덤 생성
     void ItemDrop()
     {
-        int ran = Random.Range(0, 10);
-        int itemIndex = 0;
-        if (ran < 2) return;
-        else if (ran < 4) itemIndex = 0;
-        else if (ran < 6) itemIndex = 1;
-        else if (ran < 8) itemIndex = 2;
-        else itemIndex = 3;
 
-        Instantiate(objectManager.itemObjs[itemIndex], transform.position, transform.rotation);
+
+
+        for(int i = 0; i<10; i++)
+        {
+            int ran = Random.Range(0, 10);
+            int itemIndex = 0;
+            if (ran < 2) return;
+            else if (ran < 4) itemIndex = 0;
+            else if (ran < 6) itemIndex = 1;
+            else if (ran < 8) itemIndex = 2;
+            else itemIndex = 3;
+
+            float posX = Random.Range(-2.0f, 2.0f);
+            float posY = Random.Range(-2.0f, 2.0f);
+
+            Instantiate( objectManager.itemObjs[itemIndex], 
+                         transform.position + Vector3.up * posX + Vector3.left * posY, 
+                         transform.rotation );
+        }
     }
 
     // 적 파괴 이팩트 

@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public static int gameScore;
 
     public bool isGameOver;
+    public bool isBoosPlay;
 
     public GameObject player;
     public GameObject gameOverSet;
@@ -26,41 +27,77 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
 
-        Vector3 ops = new Vector3(0, 2.5f, 0);
-        Instantiate(objectManager.enemyObj[3], ops, transform.rotation);
     }
 
     void Update()
     {
         gameScoreText.text = string.Format("{0:n0}", gameScore);
-        EnemySpawn();
-        ReSpawn();
+        if (!isBoosPlay)
+        {
+            EnemySpawn();
+            ReSpawn();
+        }
     }
 
     void EnemySpawn()
     {
-        if (!player.activeSelf) // 플레이어가 꺼져있으면, 죽어있으면
-            return;
         if (isGameOver)
             return;
+
+        if (!player.activeSelf) // 플레이어가 꺼져있으면, 죽어있으면
+            return;
+
         if (curSpawnTime < maxSpawnTime)
             return;
 
-        maxSpawnTime = Random.Range(1.5f, 3.0f);
+        if(gameScore <= 1000)
+        {
+            maxSpawnTime = Random.Range(1.5f, 3.0f);
         
-        int ran = Random.Range(0, 10);
-        int index;
+            int ran = Random.Range(0, 10);
+            int index;
 
-        if (ran < 2) return;
-        else if (ran < 4) index = 0;
-        else if (ran < 7) index = 1;
-        else index = 2;
+            if (ran < 2) return;
+            else if (ran < 4) index = 0;
+            else if (ran < 7) index = 1;
+            else index = 2;
 
-        Vector3 ops = new Vector3(Random.Range(-5.5f, 5.5f), 5, 0);
-        Instantiate(objectManager.enemyObj[index], ops, transform.rotation);
+            Vector3 ops = new Vector3(Random.Range(-5.5f, 5.5f), 5, 0);
+            Instantiate(objectManager.enemyObj[index], ops, transform.rotation);
+            
+            curSpawnTime = 0;
+        }
+        else
+        {
+            isBoosPlay = true;
+            EnemyDestroy();                 // 적과 총알 소멸
+            Invoke("EnemyBossSpawn", 2f);   // 보스 생성
 
-        curSpawnTime = 0;
+        }
+
     }
+
+    // 보스 생성전 모든 적과 총알 소멸
+    void EnemyDestroy()
+    {
+        // 생성된 적 모두 소멸
+        GameObject[] enemyDes = GameObject.FindGameObjectsWithTag("Enemy");
+        for (int i = 0; i < enemyDes.Length; i++)
+            Destroy(enemyDes[i]);
+
+        // 생성된 적의 총알 모두 소멸
+        GameObject[] enemyBulletDes = GameObject.FindGameObjectsWithTag("EnemyBullet");
+        for (int i = 0; i < enemyBulletDes.Length; i++)
+            Destroy(enemyBulletDes[i]);
+    }
+    
+    // 보스 생성
+    void EnemyBossSpawn()
+    {
+        Vector3 ops = new Vector3(0, 5.5f, 0);
+        Instantiate(objectManager.enemyObj[3], ops, transform.rotation);
+    }
+
     
     // 적 생성 시간 계산용
     void ReSpawn()
@@ -86,7 +123,7 @@ public class GameManager : MonoBehaviour
     // 게임 시작 또는 다시 시작
     public void GameStart()
     {
-        gameScore = 0;
+        gameScore = 1111110;
         GameSetting();
     }
 
