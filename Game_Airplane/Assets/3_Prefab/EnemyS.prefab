@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3077451827320326849}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -50,16 +50,19 @@ MonoBehaviour:
   hp: 5
   enemyScore: 100
   enemyName: S
+  maxShootTime: 0
+  curShootTime: 0
   HPbar: {fileID: 0}
   HpBar_Basic: {fileID: 8211063080286452419, guid: d221392b4b5c71443844de14716d4064,
     type: 3}
   sprites:
   - {fileID: 21300000, guid: 0b09ee91dd080e64a89c80c715d793a2, type: 3}
   - {fileID: 21300000, guid: fe48a96cff17b8446921f4e7f219a188, type: 3}
-  objectManager: {fileID: 0}
-  player: {fileID: 0}
-  spriteRenderer: {fileID: 0}
+  isLaserHit: 0
   laserDelay: 0
+  player: {fileID: 0}
+  objectManager: {fileID: 0}
+  spriteRenderer: {fileID: 0}
 --- !u!212 &3077451827320326852
 SpriteRenderer:
   m_ObjectHideFlags: 0

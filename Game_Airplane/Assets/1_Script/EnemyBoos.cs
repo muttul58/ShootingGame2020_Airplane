@@ -203,7 +203,7 @@ public class EnemyBoos : MonoBehaviour
     // 보스가 활성화 되면 2초 후에 정지
     private void OnEnable()
     {
-        Invoke("EnemyBossStop", 1f);    // 보스 이동 정지
+        Invoke("EnemyBossStop", 2f);    // 보스 이동 정지
     }
 
 

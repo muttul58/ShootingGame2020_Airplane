@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public GameObject gameStart;
 
     public Image[] lifeImages;
+    public Image[] boomImages;
     public Text gameScoreText;
 
     public ObjectManager objectManager;
@@ -50,7 +51,7 @@ public class GameManager : MonoBehaviour
         if (curSpawnTime < maxSpawnTime)
             return;
 
-        if(gameScore <= 1000)
+        if(gameScore <= 10000)
         {
             maxSpawnTime = Random.Range(1.5f, 3.0f);
         
@@ -114,6 +115,15 @@ public class GameManager : MonoBehaviour
             lifeImages[i].color = new Color(1, 1, 1, 1);
     }
 
+    public void PlayerBoomSet(int boom)
+    {
+        for (int i = 0; i < 3; i++)
+            boomImages[i].color = new Color(1, 1, 1, 0);
+
+        for (int i = 0; i < boom; i++)
+            boomImages[i].color = new Color(1, 1, 1, 1);
+    }
+
     // 게임 점수 계산
     public static void GameScoreUp(int score)
     {
@@ -123,7 +133,7 @@ public class GameManager : MonoBehaviour
     // 게임 시작 또는 다시 시작
     public void GameStart()
     {
-        gameScore = 1111110;
+        gameScore = 0;
         GameSetting();
     }
 

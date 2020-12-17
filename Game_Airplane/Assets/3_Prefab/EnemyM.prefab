@@ -29,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 3101192870660629713}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.7, y: 0.7, z: 0.7}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -50,14 +50,18 @@ MonoBehaviour:
   hp: 30
   enemyScore: 300
   enemyName: M
+  maxShootTime: 0
+  curShootTime: 0
   HPbar: {fileID: 0}
   HpBar_Basic: {fileID: 8211063080286452419, guid: d221392b4b5c71443844de14716d4064,
     type: 3}
   sprites:
   - {fileID: 21300000, guid: 3cb93f51a5947ee42a82f12026eafa34, type: 3}
   - {fileID: 21300000, guid: c5f25e93261f40443b113c74321f198f, type: 3}
-  objectManager: {fileID: 0}
+  isLaserHit: 0
+  laserDelay: 0
   player: {fileID: 0}
+  objectManager: {fileID: 0}
   spriteRenderer: {fileID: 0}
 --- !u!212 &3101192870660629714
 SpriteRenderer:

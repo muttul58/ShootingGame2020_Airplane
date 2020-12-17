@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
 
     public static int power;
     public static int life;
+    public static int boomCount;
     public int bulletType;
     public int laserValue;
 
@@ -29,7 +30,7 @@ public class Player : MonoBehaviour
     public bool isPlayerDead;
     public bool isBoom;
     public bool isShield;
-    public bool isClickedSpace;
+    public bool isLaserCoolTimeAdd;
     public bool isLaserShoot;
     public bool isBGSound;
 
@@ -51,21 +52,20 @@ public class Player : MonoBehaviour
         speed = 5;
         power = 1;
         life = 3;
+        boomCount=0;
         bulletType = 1;
         isBGSound = true;
-        maxLaserCoolTime = 2f;
+        maxLaserCoolTime = 15f;    // 1분, 2분, 3분 이 지나면 레이저 사용가능 
+                                    // 3초, 6초, 9초 사용 가능
     }
 
     void Update()
     {
-        // 레이저 슬라이드 초기화
-        hpSlider.maxValue = 3f;
-        hpSlider.value = curLaserCoolTime;
-
-        PlayerMove();
-        BulletShoot();
-        Reload();
-        LaserPowerCheck();
+        //LaserSet();         // 레이저 초기화 및 value 값 적용 누적
+        LaserCoolTime();
+        PlayerMove();       // 플레이어 이동
+        BulletShoot();      // 플레이어 총알 발사
+        Reload();           // 총알 리노드
         HotKey();
     }
 
@@ -124,7 +124,7 @@ public class Player : MonoBehaviour
         // Shield가 꺼진 상태로 적과 총알에 맞은 경우
         else if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
-            //Enemy.playerDead = true;    // Player 사망
+            isPlayerDead = true;      // Player 사망
             laser.SetActive(false); // Player 가 죽으면 Laser도 안보이게 설정
 
             gameObject.SetActive(false);
@@ -194,16 +194,18 @@ public class Player : MonoBehaviour
         // Boom(폭탄) 아이템을 먹은 경우
         else if (collision.gameObject.tag == "ItemBoom")
         {
+            boomCount++;
             objectManager.itmeShieldSound.Play();
             Destroy(collision.gameObject);
 
-            if (isShield)
+            if (boomCount > 3)
             {
+                boomCount = 3;
                 GameManager.GameScoreUp(500);
             }
             else
             {
-                BoomShow();
+                gameManager.PlayerBoomSet(boomCount);
             }
         }
 
@@ -372,19 +374,26 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F5)) power = 1;
         if (Input.GetKeyDown(KeyCode.F6)) power = 2;
         if (Input.GetKeyDown(KeyCode.F7)) power = 3;
-        if (Input.GetKeyDown(KeyCode.B)) BoomShow();
+        if (Input.GetKeyDown(KeyCode.B)) if(boomCount>0) BoomShow();
         if (Input.GetKeyDown(KeyCode.S)) ShieldHotKey();
         if (Input.GetKeyDown(KeyCode.F9)) ShieldShow();
         if (Input.GetKeyDown(KeyCode.F10)) BGSoundOnOff();
+        if (Input.GetKeyDown(KeyCode.L)) LaserShoot();
     }
 
     // 단축키 'B'로 폭탄 켜고/끄기
     void BoomShow()
     {
-        objectManager.boomPlayerSound.Play();
-        GameObject boom = Instantiate(objectManager.boomEffect, transform.position + Vector3.up * 4f, transform.rotation);
-        Destroy(boom, 1.5f);
-        BulletDestroy(); // 생성된 적과 적의 총알 모두 소멸
+        if(boomCount > 0)
+        {
+            boomCount--;
+            gameManager.PlayerBoomSet(boomCount);
+            objectManager.boomPlayerSound.Play();
+            GameObject boomEff = Instantiate(objectManager.boomEffect, transform.position + Vector3.up * 4f, transform.rotation);
+            Destroy(boomEff, 1.5f);
+            BulletDestroy(); // 생성된 적과 적의 총알 모두 소멸
+        }
+
     }
 
     void BulletDestroy()
@@ -425,44 +434,71 @@ public class Player : MonoBehaviour
         shield.SetActive(false);
     }
 
-
-    // 레이저 쿨타임
-    void LaserPowerCheck()
+    // 레이저 슬라이드 max 값, value 값 초기화
+    void LaserCoolTime()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isLaserShoot)
+        if (isPlayerDead || isLaserShoot)
         {
-            isClickedSpace = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.Space) || isLaserShoot)
-        {
-            isClickedSpace = false;
-            if (curLaserCoolTime > maxLaserCoolTime)
-            {
-                LaserShoot();
-            }
-            curLaserCoolTime = 0f;
+            curLaserCoolTime = 0;
+            hpSlider.value = 0;
         }
 
-        if (isClickedSpace)
-        {
-            curLaserCoolTime += Time.deltaTime;
-        }
+        hpSlider.value = curLaserCoolTime/maxLaserCoolTime;
+        curLaserCoolTime += Time.deltaTime;
     }
 
     // 레이저 발사
     void LaserShoot()
     {
-        LaserShow();
-        Invoke("LaserHide", 5f);
+        if (!isPlayerDead || !isLaserShoot)
+        {
+            // 레이저 최고 쿨타임 이상이면
+            if (curLaserCoolTime > maxLaserCoolTime)
+            {
+                LaserShow(3);
+            }
+            // 레이저 최고 쿨타임의 2/3 이상이면
+            else if (curLaserCoolTime > maxLaserCoolTime/1.5f)
+            {
+                LaserShow(2);
+            }
+            // 레이저 최고 쿨타임의 1/3  이상이면
+            else if (curLaserCoolTime > maxLaserCoolTime/3f)
+            {
+                LaserShow(1);
+            }
+        }
+       
     }
 
     // 레이저 발사
-    void LaserShow()
+    void LaserShow(int laserLevel)
     {
-        objectManager.itmeShieldSound.Play(); // 레이저 나타날 때 사운드 효과
-        isLaserShoot = true;
-        laser.SetActive(true);
+        float laserShowTime = 0;      // 레이저 사용 시간 설정 변수
+
+        if (laserLevel == 1)
+        {
+            laserShowTime = 3f;     // 3초 사용
+            //hpSlider.image.color = new Color(1, 0, 0, 1);
+        }
+        else if (laserLevel == 2)
+        {
+            laserShowTime = 6f;     // 6초 사용
+            //hpSlider.image.color = new Color(0, 1, 0, 1);
+        }
+        else if (laserLevel == 3)
+        {
+            laserShowTime = 9f;     // 9초 사용
+            //hpSlider.image.color = new Color(0, 0, 1, 1);
+        }
+        curLaserCoolTime = 0f;                  // 레이저 쿨타임 0으로 초기화
+        isLaserShoot = true;                    // 레이저 발사중임을 설정
+        laser.SetActive(true);                  // 레이저 보이기
+        objectManager.itmeShieldSound.Play();   // 레이저 나타날 때 사운드 효과
+        Invoke("LaserHide", laserShowTime);                // 레이저 숨기기
     }
+
+    // 레이저 숨기기
     void LaserHide()
     {
         isLaserShoot = false;
@@ -489,6 +525,8 @@ public class Player : MonoBehaviour
     {
         transform.position = new Vector3(0, -4, 0);
         gameObject.SetActive(true);
+        laser.SetActive(false);
+        isPlayerDead = false;
     }
 
 }
