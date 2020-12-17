@@ -39,7 +39,8 @@ public class GameManager : MonoBehaviour
 
     void EnemySpawn()
     {
-
+        if (!player.activeSelf) // 플레이어가 꺼져있으면, 죽어있으면
+            return;
         if (isGameOver)
             return;
         if (curSpawnTime < maxSpawnTime)

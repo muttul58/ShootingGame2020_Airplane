@@ -55,7 +55,7 @@ MonoBehaviour:
   maxShootTime: 0
   curShootTime: 0
   HPbar: {fileID: 0}
-  HpBar_Basic: {fileID: 8211063080286452419, guid: d221392b4b5c71443844de14716d4064,
+  HpBar_Basic: {fileID: 8211063080286452419, guid: 8e9360430afe0874dad5c4a40a5807ec,
     type: 3}
   isLaserHit: 0
   laserDelay: 0

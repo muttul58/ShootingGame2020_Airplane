@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+
 public class Enemy : MonoBehaviour
 {
-
     public float speed;
     public int hp;
     public int enemyScore;
@@ -25,6 +26,8 @@ public class Enemy : MonoBehaviour
     public float laserDelay;    // Laser에 맞으면 Delay 시간 마다 HP 감소
 
     public GameObject player;
+    public static bool playerDead;
+
     public ObjectManager objectManager;
     public SpriteRenderer spriteRenderer;
 
@@ -39,6 +42,9 @@ public class Enemy : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         player = GameObject.FindWithTag("Player");
+        //playerCode = player.GetComponent<Player>(); // active == false -> 이순간에 잠깐 생성된 애들이 못 가지고 옴.
+
+        Debug.Log("player 가져왔는지 확인" + player.name); // 가끔 플레이어를 못가지고 오는 몬스터가 생김.
 
         Rigidbody2D rigid = GetComponent<Rigidbody2D>();
         rigid.velocity = Vector3.down * speed;
@@ -69,8 +75,9 @@ public class Enemy : MonoBehaviour
 
     void BulletShoot()
     {
-        if (player.gameObject.activeSelf == false)
-            return;
+        if (!player.activeSelf) // 플레이어가 꺼져있으면, 죽어있으면
+            return; 
+        
         if (curShootTime < maxShootTime)
             return;
 

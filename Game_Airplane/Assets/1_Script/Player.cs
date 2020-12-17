@@ -26,7 +26,7 @@ public class Player : MonoBehaviour
     public bool isTouchRight;
     public bool isTouchLeft;
 
-    //public static bool isPlayerDead;
+    public bool isPlayerDead;
     public bool isBoom;
     public bool isShield;
     public bool isClickedSpace;
@@ -124,7 +124,7 @@ public class Player : MonoBehaviour
         // Shield가 꺼진 상태로 적과 총알에 맞은 경우
         else if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
-            //isPlayerDead = true;    // Player 사망
+            //Enemy.playerDead = true;    // Player 사망
             laser.SetActive(false); // Player 가 죽으면 Laser도 안보이게 설정
 
             gameObject.SetActive(false);
@@ -358,12 +358,6 @@ public class Player : MonoBehaviour
         curBulletShootTime = 0;
     }
 
-/*    void PlayerShootSound()
-    {
-        objectManager.bulletPlayerSound.Play();
-    }
-*/
-
     // 총알 발사 시간 계산
     void Reload()
     {
@@ -495,8 +489,6 @@ public class Player : MonoBehaviour
     {
         transform.position = new Vector3(0, -4, 0);
         gameObject.SetActive(true);
-        //isPlayerDead = false;
     }
-
 
 }

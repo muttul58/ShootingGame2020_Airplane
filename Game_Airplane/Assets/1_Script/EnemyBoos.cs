@@ -52,11 +52,9 @@ public class EnemyBoos : MonoBehaviour
         HPbar.transform.SetAsFirstSibling();
         HPbar.transform.localScale = new Vector3(0.01f, 0.02f, 0);
         HPbar.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        HPbar.tag = "EnemyBoosHPbar";
+        
         HPbar.maxValue = hp;
 
-
-        
     }
 
     void Update()
