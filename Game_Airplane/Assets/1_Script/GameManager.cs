@@ -51,17 +51,16 @@ public class GameManager : MonoBehaviour
         if (curSpawnTime < maxSpawnTime)
             return;
 
-        if(gameScore <= 10000)
+        if(gameScore <= 100000)
         {
-            maxSpawnTime = Random.Range(1.5f, 3.0f);
+            maxSpawnTime = Random.Range(1.2f, 2.0f);
         
             int ran = Random.Range(0, 10);
             int index;
 
-            if (ran < 2) return;
-            else if (ran < 4) index = 0;
-            else if (ran < 7) index = 1;
-            else index = 2;
+            if (ran < 7) index = 2;
+            else if (ran < 9) index = 1;
+            else index = 0;
 
             Vector3 ops = new Vector3(Random.Range(-5.5f, 5.5f), 5, 0);
             Instantiate(objectManager.enemyObj[index], ops, transform.rotation);

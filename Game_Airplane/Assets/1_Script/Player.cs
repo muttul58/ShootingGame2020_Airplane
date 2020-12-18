@@ -12,7 +12,8 @@ public class Player : MonoBehaviour
     public static int life;
     public static int boomCount;
     public int bulletType;
-    public int laserValue;
+
+    public int powerPoint = 0;          // 플레이어 Power를 Up 하기위한 점수 2000이상이면 Power +1
 
     public float maxBulletShootTime;
     public float curBulletShootTime;
@@ -21,6 +22,8 @@ public class Player : MonoBehaviour
     public float curLaserCoolTime;
     public float maxLaserTime;
     public float curLaserTime;
+    public bool isLaserShoot;
+
 
     public bool isTouchTop;
     public bool isTouchBottom;
@@ -30,14 +33,11 @@ public class Player : MonoBehaviour
     public static bool isPlayerDead;
     public bool isBoom;
     public bool isShield;
-    //public bool isLaserCoolTimeAdd;
-    public bool isLaserShoot;
     public bool isBGSound;
-
-    public Slider hpSlider;  // 레이저 모으는 게이지 표시
 
     public GameObject shield;
     public GameObject laser;
+    public Image laserGauge;
 
     public ObjectManager objectManager;
     public GameManager gameManager;
@@ -49,22 +49,21 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        speed = 5;
+        speed = 3;
         power = 1;
         life = 3;
         boomCount=0;
         bulletType = 1;
         isBGSound = true;
         isPlayerDead = true;
+        
         maxLaserCoolTime = 15f;    // 1분, 2분, 3분 이 지나면 레이저 사용가능 
-                                    // 3초, 6초, 9초 사용 가능
+                                   // 3초, 6초, 9초 사용 가능
     }
 
     void Update()
     {
-
-
-        //LaserSet();         // 레이저 초기화 및 value 값 적용 누적
+        //LaserSet();       // 레이저 초기화 및 value 값 적용 누적
         LaserCoolTime();
         PlayerMove();       // 플레이어 이동
         BulletShoot();      // 플레이어 총알 발사
@@ -115,22 +114,22 @@ public class Player : MonoBehaviour
         else if (isShield && (collision.gameObject.tag == "EnemyB"))
         {
             //Destroy(collision.gameObject);
-            GameManager.GameScoreUp(100);
+            ScoreUp(100);       // 점수 계산
         }
 
         // Shield가 켜진 상태로 적과 총알에 맞은 경우
         else if (isShield && (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet"))
         {
             Destroy(collision.gameObject);
-            GameManager.GameScoreUp(100);
+            ScoreUp(100);       // 점수 계산
         }
-        // Shield가 꺼진 상태로 적과 총알에 맞은 경우
+        // 플레이어 죽음 : Shield가 꺼진 상태로 적과 총알에 맞은 경우
         else if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
             curLaserCoolTime = 0;
-            hpSlider.value = 0;
-            isPlayerDead = true;      // Player 사망
-            laser.SetActive(false);   // Player 가 죽으면 Laser도 안보이게 설정
+            powerPoint = 0;             // Power 업그레드 점수 0 초기화
+            isPlayerDead = true;        // Player 사망
+            laser.SetActive(false);     // Player 가 죽으면 Laser도 안보이게 설정
 
             gameObject.SetActive(false);
             objectManager.deadPlayerSound.Play();
@@ -151,6 +150,7 @@ public class Player : MonoBehaviour
                 Invoke("ReloadPlayer", 2f);
 
         }
+/*
         // Power(파워) 아이템을 먹은 경우
         else if (collision.gameObject.tag == "ItemPower")
         {
@@ -164,6 +164,7 @@ public class Player : MonoBehaviour
                 GameManager.GameScoreUp(500);
             }
         }
+*/
         // Life(생명) 아이템을 먹은 경우
         else if (collision.gameObject.tag == "ItemLife")
         {
@@ -174,7 +175,7 @@ public class Player : MonoBehaviour
             if (life > 3)
             {
                 life = 3;
-                GameManager.GameScoreUp(500);
+                ScoreUp(500);       // 점수 계산
             }
             else
             {
@@ -189,7 +190,7 @@ public class Player : MonoBehaviour
 
             if (isShield)
             {
-                GameManager.GameScoreUp(500);
+                ScoreUp(500);       // 점수 계산
             }
             else
             {
@@ -206,7 +207,7 @@ public class Player : MonoBehaviour
             if (boomCount > 3)
             {
                 boomCount = 3;
-                GameManager.GameScoreUp(500);
+                ScoreUp(500);       // 점수 계산
             }
             else
             {
@@ -241,8 +242,28 @@ public class Player : MonoBehaviour
         }
     }
 
+    // 플레이어 총알 업그레이드용 
+    public void PowerUpPoint(int enemyScore)
+    {
+        if(power < 3)
+        {
+            powerPoint += enemyScore;
+            //Debug.Log("powerPoint : " + powerPoint + "          power : " + power);
+            
+            if(powerPoint > 2000 && power == 1)
+            {
+                powerPoint = 0;
+                power++;
+            }
+            else if(powerPoint > 5000 && power == 2)
+            {
+                powerPoint = 0;
+                power++;
+            }
+        }
+    }
 
-
+    // 총알 발사
     void BulletShoot()
     {
         // 스페이스 키 누르면 총알 발사
@@ -272,9 +293,12 @@ public class Player : MonoBehaviour
         
         if (bulletType == 1 && power == 1)  // 직선 1발
         {
-            GameObject bullet_01 = Instantiate(objectManager.playerBulletObjB, transform.position + Vector3.up * 0.7f, transform.rotation);
-            Rigidbody2D rigid_01 = bullet_01.GetComponent<Rigidbody2D>();
-            rigid_01.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
+            // 총알 생성                       
+            GameObject bullet_01 = Instantiate( objectManager.playerBulletObjB          // objectManager 에있는 playerBulletObjB 총알 사용
+                                              , transform.position + Vector3.up * 0.7f  // 플레이어 위치에서 위쪽으로 0.7 만큼 위에
+                                              , transform.rotation);                    // 회전 없이
+            Rigidbody2D rigid_01 = bullet_01.GetComponent<Rigidbody2D>();               // 중력 적용
+            rigid_01.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);           // 위쪽으로 bulletSpeed 만큼 속도록 이동
 
         }
         else if (bulletType == 2 && power == 1)  // 좌, 중, 우 각 1발 퍼지면서 이동
@@ -286,6 +310,7 @@ public class Player : MonoBehaviour
             Rigidbody2D rigid_01C = bullet_01C.GetComponent<Rigidbody2D>();
             Rigidbody2D rigid_01L = bullet_01L.GetComponent<Rigidbody2D>();
 
+                                         //  new Vector3(-0.2f, 0, 0)) 총알이 방사형으로 퍼지기 위해 위쪽 위치 X좌표로 -0.2 만큼변경
             rigid_01R.AddForce((Vector3.up + new Vector3(-0.2f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
             rigid_01C.AddForce(Vector3.up * bulletSpeed, ForceMode2D.Impulse);
             rigid_01L.AddForce((Vector3.up + new Vector3(0.2f, 0, 0)) * bulletSpeed, ForceMode2D.Impulse);
@@ -384,6 +409,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F9)) ShieldShow();
         if (Input.GetKeyDown(KeyCode.F10)) BGSoundOnOff();
         if (Input.GetKeyDown(KeyCode.L)) LaserShoot();
+        if (Input.GetKeyDown(KeyCode.F12)) GameManager.GameScoreUp(100000);
     }
 
     // 단축키 'B'로 폭탄 켜고/끄기
@@ -445,10 +471,11 @@ public class Player : MonoBehaviour
         if (isPlayerDead == true || isLaserShoot == true)
         {
             curLaserCoolTime = 0;
-            hpSlider.value = 0;
+            laserGauge.fillAmount = 15f;
         }
-        hpSlider.value = curLaserCoolTime / maxLaserCoolTime;
         curLaserCoolTime += Time.deltaTime;
+
+        laserGauge.fillAmount = 1 - curLaserCoolTime / maxLaserCoolTime;
 
     }
 
@@ -533,6 +560,13 @@ public class Player : MonoBehaviour
         gameObject.SetActive(true);
         laser.SetActive(false);
         isPlayerDead = false;
+    }
+
+
+    void ScoreUp(int score)
+    {
+        GameManager.gameScore += score;    // 게임 점수 누적
+        PowerUpPoint(score);         // 플레이어 총알 업그레이드 용 점수
     }
 
 }

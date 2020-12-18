@@ -31,6 +31,7 @@ public class EnemyBoos : MonoBehaviour
     public float laserDelay;    // Laser에 맞으면 Delay 시간 마다 HP 감소
 
     public GameObject player;
+    public Player playerCode;
     public ObjectManager objectManager;
     public SpriteRenderer spriteRenderer;
 
@@ -44,6 +45,7 @@ public class EnemyBoos : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         player = GameObject.FindWithTag("Player");
+        playerCode = GameObject.Find("Player").GetComponent<Player>();
 
         Rigidbody2D rigid = GetComponent<Rigidbody2D>();
         rigid.velocity = Vector3.down * speed;
@@ -237,6 +239,7 @@ public class EnemyBoos : MonoBehaviour
             // 플레이어 총알에 맞으면
             animator.SetTrigger("OnHit");
             Effect("H"); // Hit Effect
+            ScoreUp(10);  // 점수 누적
 
             if (collision.gameObject.tag == "PlayerBullet")
             {
@@ -247,17 +250,14 @@ public class EnemyBoos : MonoBehaviour
                 hp -= hitDmg;
         }
 
-                
-        // Debug.Log("hp : " + hp);
         if (hp <= 0)
         {
-            Effect("D");  // Dead Effect
+            Effect("D");                // Dead Effect
             Destroy(HPbar.gameObject);
             Destroy(gameObject);
 
-            GameManager.gameScore += enemyScore;  // 점수 누적
-            ItemDrop();   // 아이템 랜덤 생성
-            // Debug.Log("점수 : " + GameManager.gameScore);
+            ScoreUp(enemyScore);        // 점수 누적
+            ItemDrop();                 // 아이템 랜덤 생성
         }
         
     }
@@ -350,6 +350,12 @@ public class EnemyBoos : MonoBehaviour
         GameObject deadEff = Instantiate(objectManager.deadEnemyEffect[index], transform.position, transform.rotation);
         deadEff.transform.localScale = new Vector3(3f, 3f, 0);
         Destroy(deadEff, desTime);  // 1.5초 후 파괴 이팩트 소멸
+    }
+
+    void ScoreUp(int score)
+    {
+        GameManager.gameScore += score;    // 게임 점수 누적
+        playerCode.PowerUpPoint(score);    // 플레이어 총알 업그레이드 용 점수
     }
 
 }
