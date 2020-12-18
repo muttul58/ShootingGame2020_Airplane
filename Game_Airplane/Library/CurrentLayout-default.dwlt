@@ -114,10 +114,10 @@ MonoBehaviour:
     y: 30
     width: 2560
     height: 1317
-  m_MinSize: {x: 1113, y: 342}
-  m_MaxSize: {x: 26008, y: 10021}
+  m_MinSize: {x: 1110, y: 342}
+  m_MaxSize: {x: 26005, y: 10021}
   vertical: 0
-  controlID: 25292
+  controlID: 4546
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 342}
   m_MaxSize: {x: 8003, y: 8042}
   vertical: 1
-  controlID: 25362
+  controlID: 4547
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 221}
   m_MaxSize: {x: 8003, y: 4021}
   vertical: 0
-  controlID: 25427
+  controlID: 4548
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -453,9 +453,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 368.2454, y: 510.56946, z: -23.068285}
+    m_Target: {x: 0, y: -4, z: 0}
     speed: 2
-    m_Value: {x: 368.2454, y: 510.56946, z: -23.068285}
+    m_Value: {x: 0, y: -4, z: 0}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -505,9 +505,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 351.9134
+    m_Target: 0.55893564
     speed: 2
-    m_Value: 351.9134
+    m_Value: 0.55893564
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -772,7 +772,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 5828fcff3cf5ffff42f5ffff6838000088380000c0380000
+      m_ExpandedIDs: 12fbffff3efbffff46fbffff08350000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -835,20 +835,20 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/1_Script
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets
+  - Assets/1_Script
   m_LastFoldersGridSize: -1
   m_LastProjectPath: D:\Seagate\SynologyDrive\GitHub\ShootingGame2020_Airplane\Game_Airplane
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 4e3b0000
-    m_LastClickedID: 15182
-    m_ExpandedIDs: 000000004e3b0000503b0000563b000000ca9a3b
+    m_SelectedIDs: 16390000
+    m_LastClickedID: 14614
+    m_ExpandedIDs: 000000000a3900000c3900000e39000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -876,7 +876,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000004e3b0000503b0000563b000000ca9a3b
+    m_ExpandedIDs: 000000000a3900000c3900000e39000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -903,7 +903,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 1
+    m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: 06340000a2350000c234000014350000f45900004c340000443700000293000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0

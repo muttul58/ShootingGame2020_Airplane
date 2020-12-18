@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -132,28 +133,35 @@ public class GameManager : MonoBehaviour
     // 게임 시작 또는 다시 시작
     public void GameStart()
     {
-        gameScore = 0;
-        GameSetting();
+        gameStart.SetActive(false);
+        GameSetting("start");
+    }
+
+    public void GameReStart()
+    {
+        SceneManager.LoadScene(0);
     }
 
     // 게임 이어하기
     public void GameContinue()
     {
-        GameSetting();
+        GameSetting("continue");
     }
 
     // 게임 시작 초기 설정
-    void GameSetting()
+    void GameSetting(string type)
     {
         Player.life = 3;
         Player.power = 1;
-        isGameOver = false;
         Player.isPlayerDead = false;
+        isGameOver = false;
+        if(type == "start") gameScore = 0;
         gameStart.SetActive(false);
         PlayerLifeSet(3);
 
         player.transform.position = new Vector3(0, -4, 0);
         player.SetActive(true);
+
 
         if (gameOverSet.activeSelf == true)
             gameOverSet.SetActive(false);

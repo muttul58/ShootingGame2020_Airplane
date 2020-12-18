@@ -4471,11 +4471,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 614015837170280498, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 614015837170280499, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1903074187}
+    - target: {fileID: 614015837170280499, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: GameReStart
+      objectReference: {fileID: 0}
     - target: {fileID: 614015837260760729, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
         type: 3}
       propertyPath: m_RenderMode
@@ -4591,6 +4601,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 614015837338840461, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
+        type: 3}
+      propertyPath: m_Text
+      value: "\uCC98\uC74C\uBD80\uD130\uD558\uAE30"
+      objectReference: {fileID: 0}
     - target: {fileID: 614015837397608234, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -4611,6 +4626,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 614015837994762977, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 614015837994762982, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -4619,7 +4639,7 @@ PrefabInstance:
     - target: {fileID: 614015838036120260, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
         type: 3}
       propertyPath: m_Text
-      value: "\uC774\uC5B4\uD558\uAE30"
+      value: "\uACC4\uC18D\uC774\uC5B4\uD558\uAE30"
       objectReference: {fileID: 0}
     - target: {fileID: 614015838783747862, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
         type: 3}
