@@ -27,10 +27,10 @@ public class Player : MonoBehaviour
     public bool isTouchRight;
     public bool isTouchLeft;
 
-    public bool isPlayerDead;
+    public static bool isPlayerDead;
     public bool isBoom;
     public bool isShield;
-    public bool isLaserCoolTimeAdd;
+    //public bool isLaserCoolTimeAdd;
     public bool isLaserShoot;
     public bool isBGSound;
 
@@ -55,12 +55,15 @@ public class Player : MonoBehaviour
         boomCount=0;
         bulletType = 1;
         isBGSound = true;
+        isPlayerDead = true;
         maxLaserCoolTime = 15f;    // 1분, 2분, 3분 이 지나면 레이저 사용가능 
                                     // 3초, 6초, 9초 사용 가능
     }
 
     void Update()
     {
+
+
         //LaserSet();         // 레이저 초기화 및 value 값 적용 누적
         LaserCoolTime();
         PlayerMove();       // 플레이어 이동
@@ -111,7 +114,7 @@ public class Player : MonoBehaviour
         // Shield가 켜진 상태로 보스에 다으면
         else if (isShield && (collision.gameObject.tag == "EnemyB"))
         {
-            Destroy(collision.gameObject);
+            //Destroy(collision.gameObject);
             GameManager.GameScoreUp(100);
         }
 
@@ -124,8 +127,10 @@ public class Player : MonoBehaviour
         // Shield가 꺼진 상태로 적과 총알에 맞은 경우
         else if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
+            curLaserCoolTime = 0;
+            hpSlider.value = 0;
             isPlayerDead = true;      // Player 사망
-            laser.SetActive(false); // Player 가 죽으면 Laser도 안보이게 설정
+            laser.SetActive(false);   // Player 가 죽으면 Laser도 안보이게 설정
 
             gameObject.SetActive(false);
             objectManager.deadPlayerSound.Play();
@@ -437,20 +442,20 @@ public class Player : MonoBehaviour
     // 레이저 슬라이드 max 값, value 값 초기화
     void LaserCoolTime()
     {
-        if (isPlayerDead || isLaserShoot)
+        if (isPlayerDead == true || isLaserShoot == true)
         {
             curLaserCoolTime = 0;
             hpSlider.value = 0;
         }
-
-        hpSlider.value = curLaserCoolTime/maxLaserCoolTime;
+        hpSlider.value = curLaserCoolTime / maxLaserCoolTime;
         curLaserCoolTime += Time.deltaTime;
+
     }
 
     // 레이저 발사
     void LaserShoot()
     {
-        if (!isPlayerDead || !isLaserShoot)
+        if (!isPlayerDead && !isLaserShoot)
         {
             // 레이저 최고 쿨타임 이상이면
             if (curLaserCoolTime > maxLaserCoolTime)
@@ -474,6 +479,9 @@ public class Player : MonoBehaviour
     // 레이저 발사
     void LaserShow(int laserLevel)
     {
+        curLaserCoolTime = 0;         // 레이저 쿨타임 0으로 초기화
+        isLaserShoot = true;                    // 레이저 발사중임을 설정
+
         float laserShowTime = 0;      // 레이저 사용 시간 설정 변수
 
         if (laserLevel == 1)
@@ -491,8 +499,6 @@ public class Player : MonoBehaviour
             laserShowTime = 9f;     // 9초 사용
             //hpSlider.image.color = new Color(0, 0, 1, 1);
         }
-        curLaserCoolTime = 0f;                  // 레이저 쿨타임 0으로 초기화
-        isLaserShoot = true;                    // 레이저 발사중임을 설정
         laser.SetActive(true);                  // 레이저 보이기
         objectManager.itmeShieldSound.Play();   // 레이저 나타날 때 사운드 효과
         Invoke("LaserHide", laserShowTime);                // 레이저 숨기기

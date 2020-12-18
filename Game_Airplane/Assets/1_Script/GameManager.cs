@@ -149,6 +149,7 @@ public class GameManager : MonoBehaviour
         Player.life = 3;
         Player.power = 1;
         isGameOver = false;
+        Player.isPlayerDead = false;
         gameStart.SetActive(false);
         PlayerLifeSet(3);
 

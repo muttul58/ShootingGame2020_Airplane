@@ -3999,10 +3999,8 @@ MonoBehaviour:
   isTouchBottom: 0
   isTouchRight: 0
   isTouchLeft: 0
-  isPlayerDead: 0
   isBoom: 0
   isShield: 0
-  isLaserCoolTimeAdd: 0
   isLaserShoot: 0
   isBGSound: 0
   hpSlider: {fileID: 1119657839}
@@ -4446,6 +4444,11 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1903074187}
+    - target: {fileID: 614015837260760729, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
+        type: 3}
+      propertyPath: m_RenderMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 614015837260760730, guid: 59b7b30bf7fa5964ba265ecf734e8e7f,
         type: 3}
       propertyPath: m_Name
