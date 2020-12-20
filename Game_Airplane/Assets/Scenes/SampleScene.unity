@@ -9899,6 +9899,7 @@ MonoBehaviour:
   player: {fileID: 1932259071}
   gameOverSet: {fileID: 1839390572}
   gameStart: {fileID: 1433154803}
+  gameClear: {fileID: 838067376}
   lifeImages:
   - {fileID: 1949327575}
   - {fileID: 89108663}

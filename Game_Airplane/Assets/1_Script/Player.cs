@@ -265,7 +265,7 @@ public class Player : MonoBehaviour
         }
 
         powerGauge.fillAmount = 1 - curPowerPoint / maxPowerPoint;
-        Debug.Log("1. powerGauge : " + powerGauge.fillAmount + "     PowerPoint :" + curPowerPoint +"      power : " + power);
+        //Debug.Log("1. powerGauge : " + powerGauge.fillAmount + "     PowerPoint :" + curPowerPoint +"      power : " + power);
     }
 
     // 플레이어 총알 업그레이드용 

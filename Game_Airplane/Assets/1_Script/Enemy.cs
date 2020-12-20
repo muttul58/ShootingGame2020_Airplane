@@ -270,7 +270,7 @@ public class Enemy : MonoBehaviour
     void ScoreUp(int score)
     {
         GameManager.gameScore += score;    // 게임 점수 누적
-        Debug.Log("적에서 점수 받음 : " + score);
+        //Debug.Log("적에서 점수 받음 : " + score);
         playerCode.PowerUpPoint(score);         // 플레이어 총알 업그레이드 용 점수
     }
 

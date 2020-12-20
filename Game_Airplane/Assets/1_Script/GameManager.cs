@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
             EnemySpawn();
             ReSpawn();
         }
+        Debug.Log("Manager isGameClear : " + isGameClear);
         if (isGameClear) GameClear();
     }
 

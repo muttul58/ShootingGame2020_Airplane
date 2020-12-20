@@ -45,7 +45,7 @@ public class EnemyBoos : MonoBehaviour
 
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        gameManager = GameObject.FindWithTag("GameManager");
+        //gameManager = GameObject.FindWithTag("GameObject");
 
         player = GameObject.FindWithTag("Player");
         playerCode = GameObject.Find("Player").GetComponent<Player>();
@@ -208,7 +208,7 @@ public class EnemyBoos : MonoBehaviour
     // 보스가 활성화 되면 2초 후에 정지
     void OnEnable()
     {
-        Invoke("EnemyBossStop", 5f);    // 보스 이동 정지
+        Invoke("EnemyBossStop", 1.3f);    // 보스 이동 정지
     }
 
 
@@ -286,13 +286,15 @@ public class EnemyBoos : MonoBehaviour
 
             if (hp <= 0)
             {
+                GameManager.isGameClear = true;
                 Destroy(HPbar.gameObject);
                 Destroy(gameObject);
                 GameManager.gameScore += enemyScore;  // 점수 누적
                 Effect("D");  // Dead Effect
                 ItemDrop();   // 아이템 랜덤 생성
                               // Debug.Log("점수 : " + GameManager.gameScore);
-                GameManager.isGameClear = true;
+                Debug.Log("Boss isGameClear : " + GameManager.isGameClear);
+
             }
         }
     }
