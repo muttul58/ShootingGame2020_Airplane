@@ -13,11 +13,13 @@ public class GameManager : MonoBehaviour
     public static int gameScore;
 
     public bool isGameOver;
+    public static bool isGameClear;
     public bool isBoosPlay;
 
     public GameObject player;
     public GameObject gameOverSet;
     public GameObject gameStart;
+    public GameObject gameClear;
 
     public Image[] lifeImages;
     public Image[] boomImages;
@@ -39,6 +41,7 @@ public class GameManager : MonoBehaviour
             EnemySpawn();
             ReSpawn();
         }
+        if (isGameClear) GameClear();
     }
 
     void EnemySpawn()
@@ -52,7 +55,7 @@ public class GameManager : MonoBehaviour
         if (curSpawnTime < maxSpawnTime)
             return;
 
-        if(gameScore <= 100000)
+        if(gameScore <= 1000)
         {
             maxSpawnTime = Random.Range(1.2f, 2.0f);
         
@@ -95,7 +98,7 @@ public class GameManager : MonoBehaviour
     // 보스 생성
     void EnemyBossSpawn()
     {
-        Vector3 ops = new Vector3(0, 5.5f, 0);
+        Vector3 ops = new Vector3(0, 4.5f, 0);
         Instantiate(objectManager.enemyObj[3], ops, transform.rotation);
     }
 
@@ -142,6 +145,12 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+
+    void GameClear()
+    {
+        gameClear.SetActive(true);
+    }
+
     // 게임 이어하기
     public void GameContinue()
     {
@@ -151,6 +160,7 @@ public class GameManager : MonoBehaviour
     // 게임 시작 초기 설정
     void GameSetting(string type)
     {
+
         Player.life = 3;
         Player.power = 1;
         Player.isPlayerDead = false;

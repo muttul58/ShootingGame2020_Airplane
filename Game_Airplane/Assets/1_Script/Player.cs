@@ -218,6 +218,14 @@ public class Player : MonoBehaviour
                 gameManager.PlayerBoomSet(boomCount);
             }
         }
+        // Coin(코인) 아이템을 먹은 경우
+        else if (collision.gameObject.tag == "ItemCoin")
+        {
+            objectManager.itmePowerSound.Play();
+            Destroy(collision.gameObject);
+
+            ScoreUp(500);       // 점수 계산
+        }
 
     }
 

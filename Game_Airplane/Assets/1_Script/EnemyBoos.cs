@@ -30,6 +30,7 @@ public class EnemyBoos : MonoBehaviour
     public bool isLaserHit;     // 플레이어 Laser에 맞은 것 확인
     public float laserDelay;    // Laser에 맞으면 Delay 시간 마다 HP 감소
 
+    public GameObject gameManager;
     public GameObject player;
     public Player playerCode;
     public ObjectManager objectManager;
@@ -43,6 +44,8 @@ public class EnemyBoos : MonoBehaviour
         objectManager = GameObject.Find("ObjectManager").GetComponent<ObjectManager>();
 
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        gameManager = GameObject.FindWithTag("GameManager");
 
         player = GameObject.FindWithTag("Player");
         playerCode = GameObject.Find("Player").GetComponent<Player>();
@@ -203,9 +206,9 @@ public class EnemyBoos : MonoBehaviour
     }
 
     // 보스가 활성화 되면 2초 후에 정지
-    private void OnEnable()
+    void OnEnable()
     {
-        Invoke("EnemyBossStop", 2f);    // 보스 이동 정지
+        Invoke("EnemyBossStop", 5f);    // 보스 이동 정지
     }
 
 
@@ -289,6 +292,7 @@ public class EnemyBoos : MonoBehaviour
                 Effect("D");  // Dead Effect
                 ItemDrop();   // 아이템 랜덤 생성
                               // Debug.Log("점수 : " + GameManager.gameScore);
+                GameManager.isGameClear = true;
             }
         }
     }
@@ -306,9 +310,6 @@ public class EnemyBoos : MonoBehaviour
     // 아이템 랜덤 생성
     void ItemDrop()
     {
-
-
-
         for(int i = 0; i<10; i++)
         {
             int ran = Random.Range(0, 10);
@@ -325,24 +326,19 @@ public class EnemyBoos : MonoBehaviour
             Instantiate( objectManager.itemObjs[itemIndex], 
                          transform.position + Vector3.up * posX + Vector3.left * posY, 
                          transform.rotation );
-        }
-        for (int i = 0; i < 10; i++)
-        {
-            int ran = Random.Range(0, 10);
-            int itemIndex = 0;
-            if (ran < 2) return;
-            else if (ran < 4) itemIndex = 0;
-            else if (ran < 6) itemIndex = 1;
-            else if (ran < 8) itemIndex = 2;
-            else itemIndex = 3;
 
-            float posX = Random.Range(-2.0f, 2.0f);
-            float posY = Random.Range(-2.0f, 2.0f);
+            // Coin 아이템 10개
+            for (int j = 0; j < 10; j++)
+            {
+                posX = Random.Range(-3.0f, 3.0f);
+                posY = Random.Range(-3.0f, 2.0f);
 
-            Instantiate(objectManager.itemObjs[itemIndex],
-                         transform.position + Vector3.up * posX + Vector3.left * posY,
-                         transform.rotation);
+                Instantiate(objectManager.itemObjs[4],
+                             transform.position + Vector3.up * posX + Vector3.left * posY,
+                             transform.rotation);
+            }
         }
+
     }
 
     // 적 파괴 이팩트 

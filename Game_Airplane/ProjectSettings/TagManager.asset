@@ -20,6 +20,7 @@ TagManager:
   - EnemyHpBar
   - EnemyBullet
   - EnemyB
+  - ItemCoin
   layers:
   - Default
   - TransparentFX
