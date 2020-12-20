@@ -6,7 +6,7 @@ public class BackGround : MonoBehaviour
 {
     public string bgName;
     public float speed;
-    public int pos;
+    public float pos;
     
     public int startIndex;
     public int endIndex;
@@ -15,7 +15,7 @@ public class BackGround : MonoBehaviour
 
     private void Update()
     {
-        if(bgName == "Land") pos = 19;
+        if(bgName == "Land") pos = 18.8f;
         else pos = Random.Range(40, 60);
         
         Vector3 curPos = transform.position;

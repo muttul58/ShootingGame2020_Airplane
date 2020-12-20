@@ -37,6 +37,9 @@ public class Player : MonoBehaviour
 
     public GameObject shield;
     public GameObject laser;
+    public Image laserImg;
+    public Canvas laserCanvas;
+
     public Image laserGauge;
     public Image powerGauge;
 
@@ -61,7 +64,6 @@ public class Player : MonoBehaviour
         maxLaserCoolTime = 15f;    // 1분, 2분, 3분 이 지나면 레이저 사용가능 
                                    // 3초, 6초, 9초 사용 가능
 
-
     }
 
     void Update()
@@ -73,6 +75,8 @@ public class Player : MonoBehaviour
         BulletShoot();      // 플레이어 총알 발사
         Reload();           // 총알 리노드
         HotKey();
+        
+        laserCanvas.transform.position = gameObject.transform.position;
     }
 
 
@@ -254,43 +258,6 @@ public class Player : MonoBehaviour
         }
     }
 
-
-    // Power슬라이드 max 값, value 값 초기화
-    void PowerCoolTime()
-    {
-        if (isPlayerDead == true)
-        {
-            curPowerPoint = 0;
-            powerGauge.fillAmount = 1f;
-        }
-
-        powerGauge.fillAmount = 1 - curPowerPoint / maxPowerPoint;
-        //Debug.Log("1. powerGauge : " + powerGauge.fillAmount + "     PowerPoint :" + curPowerPoint +"      power : " + power);
-    }
-
-    // 플레이어 총알 업그레이드용 
-    public void PowerUpPoint(int enemyScore)
-    {
-
-        if (power < 3)
-        {
-            curPowerPoint += (float)enemyScore;
-
-            if (curPowerPoint > 2000 && power == 1)
-            {
-                curPowerPoint = 0;
-                powerGauge.fillAmount = 1;
-                maxPowerPoint = 5000;
-                power++;
-            }
-            else if(curPowerPoint > 5000 && power == 2)
-            {
-                curPowerPoint = 0; 
-                powerGauge.fillAmount = 1;
-                power++;
-            }
-        }
-    }
 
     // 총알 발사
     void BulletShoot()
@@ -495,7 +462,42 @@ public class Player : MonoBehaviour
     }
 
 
+    // Power슬라이드 max 값, value 값 초기화
+    void PowerCoolTime()
+    {
+        if (isPlayerDead == true)
+        {
+            curPowerPoint = 0;
+            powerGauge.fillAmount = 1f;
+        }
 
+        powerGauge.fillAmount = curPowerPoint / maxPowerPoint;
+        //Debug.Log("1. powerGauge : " + powerGauge.fillAmount + "     PowerPoint :" + curPowerPoint +"      power : " + power);
+    }
+
+    // 플레이어 총알 업그레이드용 
+    public void PowerUpPoint(int enemyScore)
+    {
+
+        if (power < 3)
+        {
+            curPowerPoint += (float)enemyScore;
+
+            if (curPowerPoint > 2000 && power == 1)
+            {
+                curPowerPoint = 0;
+                powerGauge.fillAmount = 1;
+                maxPowerPoint = 5000;
+                power++;
+            }
+            else if (curPowerPoint > 5000 && power == 2)
+            {
+                curPowerPoint = 0;
+                powerGauge.fillAmount = 1;
+                power++;
+            }
+        }
+    }
 
     // 레이저 슬라이드 max 값, value 값 초기화
     void LaserCoolTime()
@@ -507,11 +509,9 @@ public class Player : MonoBehaviour
         }
         curLaserCoolTime += Time.deltaTime;
 
-        laserGauge.fillAmount = 1 - curLaserCoolTime / maxLaserCoolTime;
+        laserGauge.fillAmount = curLaserCoolTime / maxLaserCoolTime;
 
     }
-
-
 
     // 레이저 발사
     void LaserShoot()
@@ -560,6 +560,10 @@ public class Player : MonoBehaviour
             laserShowTime = 9f;     // 9초 사용
             //hpSlider.image.color = new Color(0, 0, 1, 1);
         }
+
+        float maxLaserSize = 10f;
+
+        laserImg.fillAmount = curBulletShootTime / maxLaserSize; 
         laser.SetActive(true);                  // 레이저 보이기
         objectManager.itmeShieldSound.Play();   // 레이저 나타날 때 사운드 효과
         Invoke("LaserHide", laserShowTime);                // 레이저 숨기기

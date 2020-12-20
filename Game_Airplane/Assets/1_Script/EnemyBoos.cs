@@ -45,7 +45,7 @@ public class EnemyBoos : MonoBehaviour
 
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        //gameManager = GameObject.FindWithTag("GameObject");
+        gameManager = GameObject.FindWithTag("GameController");
 
         player = GameObject.FindWithTag("Player");
         playerCode = GameObject.Find("Player").GetComponent<Player>();
@@ -247,22 +247,24 @@ public class EnemyBoos : MonoBehaviour
             if (collision.gameObject.tag == "PlayerBullet")
             {
                 Destroy(collision.gameObject);
-            }
                 bulletCode = collision.gameObject.GetComponent<Bullet>();
                 hitDmg = bulletCode.dmg;
                 hp -= hitDmg;
-        }
 
-        if (hp <= 0)
-        {
-            Effect("D");                // Dead Effect
-            Destroy(HPbar.gameObject);
-            Destroy(gameObject);
+            }
 
-            ScoreUp(enemyScore);        // 점수 누적
-            ItemDrop();                 // 아이템 랜덤 생성
+            if (hp <= 0)
+            {
+                Effect("D");                // Dead Effect
+                Destroy(HPbar.gameObject);
+                Destroy(gameObject);
+
+                ScoreUp(enemyScore);        // 점수 누적
+                ItemDrop();                 // 아이템 랜덤 생성
+                GameManager.isGameClear = true;
+                //Invoke("GameManger.GameClear", 5f);   
+            }
         }
-        
     }
 
     // 레이저가 적에게 충돌 상태이면
@@ -286,12 +288,13 @@ public class EnemyBoos : MonoBehaviour
 
             if (hp <= 0)
             {
-                GameManager.isGameClear = true;
                 Destroy(HPbar.gameObject);
                 Destroy(gameObject);
                 GameManager.gameScore += enemyScore;  // 점수 누적
                 Effect("D");  // Dead Effect
                 ItemDrop();   // 아이템 랜덤 생성
+                GameManager.isGameClear = true;
+                //Invoke("GameManger.GameClear", 5f);
                               // Debug.Log("점수 : " + GameManager.gameScore);
                 Debug.Log("Boss isGameClear : " + GameManager.isGameClear);
 
@@ -316,11 +319,11 @@ public class EnemyBoos : MonoBehaviour
         {
             int ran = Random.Range(0, 10);
             int itemIndex = 0;
-            if (ran < 2) return;
-            else if (ran < 4) itemIndex = 0;
-            else if (ran < 6) itemIndex = 1;
-            else if (ran < 8) itemIndex = 2;
-            else itemIndex = 3;
+            if (ran < 2) itemIndex = 0;
+            else if (ran < 4) itemIndex = 1;
+            else if (ran < 6) itemIndex = 2;
+            else if (ran < 8) itemIndex = 3;
+            else itemIndex = 4;
 
             float posX = Random.Range(-2.0f, 2.0f);
             float posY = Random.Range(-2.0f, 2.0f);
@@ -329,16 +332,16 @@ public class EnemyBoos : MonoBehaviour
                          transform.position + Vector3.up * posX + Vector3.left * posY, 
                          transform.rotation );
 
-            // Coin 아이템 10개
-            for (int j = 0; j < 10; j++)
-            {
-                posX = Random.Range(-3.0f, 3.0f);
-                posY = Random.Range(-3.0f, 2.0f);
+        }
+        // Coin 아이템 10개
+        for (int j = 0; j < 100; j++)
+        {
+            float posX = Random.Range(-3.0f, 3.0f);
+            float posY = Random.Range(-3.0f, 2.0f); // 0.00 0.00
 
-                Instantiate(objectManager.itemObjs[4],
-                             transform.position + Vector3.up * posX + Vector3.left * posY,
-                             transform.rotation);
-            }
+            Instantiate(objectManager.itemObjs[4],
+                            transform.position + Vector3.up * posX + Vector3.left * posY,
+                            transform.rotation);
         }
 
     }

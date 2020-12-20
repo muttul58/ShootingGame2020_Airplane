@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
             ReSpawn();
         }
         Debug.Log("Manager isGameClear : " + isGameClear);
-        if (isGameClear) GameClear();
+        if (isGameClear && gameClear.activeSelf == false) Invoke("GameClear", 20f);
     }
 
     void EnemySpawn()
@@ -143,13 +143,21 @@ public class GameManager : MonoBehaviour
 
     public void GameReStart()
     {
+        if (isGameClear)
+        {
+            isGameClear = false;
+            gameClear.SetActive(false);
+            Time.timeScale = 1; 
+        }
+
         SceneManager.LoadScene(0);
     }
 
 
-    void GameClear()
+    public void GameClear()
     {
         gameClear.SetActive(true);
+        Time.timeScale = 0;
     }
 
     // 게임 이어하기
