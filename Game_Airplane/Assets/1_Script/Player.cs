@@ -13,17 +13,17 @@ public class Player : MonoBehaviour
     public static int boomCount;
     public int bulletType;
 
-    public int powerPoint = 0;          // 플레이어 Power를 Up 하기위한 점수 2000이상이면 Power +1
-
     public float maxBulletShootTime;
     public float curBulletShootTime;
     
+    public float maxPowerPoint;
+    public float curPowerPoint;// 플레이어 Power를 Up 하기위한 점수 2000이상이면 Power +1
+
     public float maxLaserCoolTime;
     public float curLaserCoolTime;
     public float maxLaserTime;
     public float curLaserTime;
     public bool isLaserShoot;
-
 
     public bool isTouchTop;
     public bool isTouchBottom;
@@ -38,6 +38,7 @@ public class Player : MonoBehaviour
     public GameObject shield;
     public GameObject laser;
     public Image laserGauge;
+    public Image powerGauge;
 
     public ObjectManager objectManager;
     public GameManager gameManager;
@@ -56,13 +57,16 @@ public class Player : MonoBehaviour
         bulletType = 1;
         isBGSound = true;
         isPlayerDead = true;
-        
+        maxPowerPoint = 2000f;
         maxLaserCoolTime = 15f;    // 1분, 2분, 3분 이 지나면 레이저 사용가능 
                                    // 3초, 6초, 9초 사용 가능
+
+
     }
 
     void Update()
     {
+        PowerCoolTime();
         //LaserSet();       // 레이저 초기화 및 value 값 적용 누적
         LaserCoolTime();
         PlayerMove();       // 플레이어 이동
@@ -127,7 +131,7 @@ public class Player : MonoBehaviour
         else if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
             curLaserCoolTime = 0;
-            powerPoint = 0;             // Power 업그레드 점수 0 초기화
+            curPowerPoint = 0;             // Power 업그레드 점수 0 초기화
             isPlayerDead = true;        // Player 사망
             laser.SetActive(false);     // Player 가 죽으면 Laser도 안보이게 설정
 
@@ -242,22 +246,39 @@ public class Player : MonoBehaviour
         }
     }
 
+
+    // Power슬라이드 max 값, value 값 초기화
+    void PowerCoolTime()
+    {
+        if (isPlayerDead == true)
+        {
+            curPowerPoint = 0;
+            powerGauge.fillAmount = 1f;
+        }
+
+        powerGauge.fillAmount = 1 - curPowerPoint / maxPowerPoint;
+        Debug.Log("1. powerGauge : " + powerGauge.fillAmount + "     PowerPoint :" + curPowerPoint +"      power : " + power);
+    }
+
     // 플레이어 총알 업그레이드용 
     public void PowerUpPoint(int enemyScore)
     {
-        if(power < 3)
+
+        if (power < 3)
         {
-            powerPoint += enemyScore;
-            //Debug.Log("powerPoint : " + powerPoint + "          power : " + power);
-            
-            if(powerPoint > 2000 && power == 1)
+            curPowerPoint += (float)enemyScore;
+
+            if (curPowerPoint > 2000 && power == 1)
             {
-                powerPoint = 0;
+                curPowerPoint = 0;
+                powerGauge.fillAmount = 1;
+                maxPowerPoint = 5000;
                 power++;
             }
-            else if(powerPoint > 5000 && power == 2)
+            else if(curPowerPoint > 5000 && power == 2)
             {
-                powerPoint = 0;
+                curPowerPoint = 0; 
+                powerGauge.fillAmount = 1;
                 power++;
             }
         }
@@ -465,19 +486,24 @@ public class Player : MonoBehaviour
         shield.SetActive(false);
     }
 
+
+
+
     // 레이저 슬라이드 max 값, value 값 초기화
     void LaserCoolTime()
     {
         if (isPlayerDead == true || isLaserShoot == true)
         {
             curLaserCoolTime = 0;
-            laserGauge.fillAmount = 15f;
+            laserGauge.fillAmount = 1f;
         }
         curLaserCoolTime += Time.deltaTime;
 
         laserGauge.fillAmount = 1 - curLaserCoolTime / maxLaserCoolTime;
 
     }
+
+
 
     // 레이저 발사
     void LaserShoot()

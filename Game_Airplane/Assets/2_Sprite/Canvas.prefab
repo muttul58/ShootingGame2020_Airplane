@@ -188,8 +188,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bgSoundImgs: []
-  sprite: {fileID: 0}
-  button: {fileID: 0}
+  sprite:
+  - {fileID: 0}
+  BGIconButton: {fileID: 0}
+  playerCode: {fileID: 0}
   isBGSoundOn: 0
 --- !u!223 &614015837260760729
 Canvas:
@@ -1223,7 +1225,7 @@ RectTransform:
   m_GameObject: {fileID: 6478729432322024181}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 10.625, y: 8.029, z: 1}
+  m_LocalScale: {x: 8.101668, y: 10.135007, z: 1}
   m_Children: []
   m_Father: {fileID: 4629815285565628229}
   m_RootOrder: 0

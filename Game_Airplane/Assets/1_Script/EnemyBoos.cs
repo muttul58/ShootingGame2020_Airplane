@@ -326,6 +326,23 @@ public class EnemyBoos : MonoBehaviour
                          transform.position + Vector3.up * posX + Vector3.left * posY, 
                          transform.rotation );
         }
+        for (int i = 0; i < 10; i++)
+        {
+            int ran = Random.Range(0, 10);
+            int itemIndex = 0;
+            if (ran < 2) return;
+            else if (ran < 4) itemIndex = 0;
+            else if (ran < 6) itemIndex = 1;
+            else if (ran < 8) itemIndex = 2;
+            else itemIndex = 3;
+
+            float posX = Random.Range(-2.0f, 2.0f);
+            float posY = Random.Range(-2.0f, 2.0f);
+
+            Instantiate(objectManager.itemObjs[itemIndex],
+                         transform.position + Vector3.up * posX + Vector3.left * posY,
+                         transform.rotation);
+        }
     }
 
     // 적 파괴 이팩트 

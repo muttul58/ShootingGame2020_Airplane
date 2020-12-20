@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
             else if (ran < 9) index = 1;
             else index = 0;
 
-            Vector3 ops = new Vector3(Random.Range(-5.5f, 5.5f), 5, 0);
+            Vector3 ops = new Vector3(Random.Range(-4f, 4f), 5, 0);
             Instantiate(objectManager.enemyObj[index], ops, transform.rotation);
             
             curSpawnTime = 0;
@@ -174,6 +174,10 @@ public class GameManager : MonoBehaviour
         gameOverSet.SetActive(true);
     }
 
-
+    // 게임 끄기
+    public void GameQuit()
+    {
+        Application.Quit();
+    }
 
 }
