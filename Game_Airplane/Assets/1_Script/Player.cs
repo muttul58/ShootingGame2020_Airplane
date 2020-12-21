@@ -21,9 +21,13 @@ public class Player : MonoBehaviour
 
     public float maxLaserCoolTime;
     public float curLaserCoolTime;
+    public float curLaserMoveTime;     // 레이저가 점점 길어지는 효과 시간
+
+
     public float maxLaserTime;
     public float curLaserTime;
     public bool isLaserShoot;
+    public float maxLaserSize;
 
     public bool isTouchTop;
     public bool isTouchBottom;
@@ -63,14 +67,13 @@ public class Player : MonoBehaviour
         maxPowerPoint = 2000f;
         maxLaserCoolTime = 15f;    // 1분, 2분, 3분 이 지나면 레이저 사용가능 
                                    // 3초, 6초, 9초 사용 가능
-
     }
 
     void Update()
     {
         PowerCoolTime();
-        //LaserSet();       // 레이저 초기화 및 value 값 적용 누적
         LaserCoolTime();
+        LaserMoveTime();    // 레이저가 점점 길어지는 시간 2초
         PlayerMove();       // 플레이어 이동
         BulletShoot();      // 플레이어 총알 발사
         Reload();           // 총알 리노드
@@ -472,29 +475,27 @@ public class Player : MonoBehaviour
         }
 
         powerGauge.fillAmount = curPowerPoint / maxPowerPoint;
-        //Debug.Log("1. powerGauge : " + powerGauge.fillAmount + "     PowerPoint :" + curPowerPoint +"      power : " + power);
     }
 
     // 플레이어 총알 업그레이드용 
     public void PowerUpPoint(int enemyScore)
     {
-
         if (power < 3)
         {
             curPowerPoint += (float)enemyScore;
 
             if (curPowerPoint > 2000 && power == 1)
             {
-                curPowerPoint = 0;
-                powerGauge.fillAmount = 1;
-                maxPowerPoint = 5000;
                 power++;
+                curPowerPoint = 0;
+                maxPowerPoint = 5000;
+                powerGauge.fillAmount = 0;
             }
             else if (curPowerPoint > 5000 && power == 2)
             {
-                curPowerPoint = 0;
-                powerGauge.fillAmount = 1;
                 power++;
+                curPowerPoint = 0;
+                powerGauge.fillAmount = 0;
             }
         }
     }
@@ -505,75 +506,65 @@ public class Player : MonoBehaviour
         if (isPlayerDead == true || isLaserShoot == true)
         {
             curLaserCoolTime = 0;
-            laserGauge.fillAmount = 1f;
+            laserGauge.fillAmount = 0f;
         }
+
         curLaserCoolTime += Time.deltaTime;
-
         laserGauge.fillAmount = curLaserCoolTime / maxLaserCoolTime;
+    }
 
+    void LaserMoveTime()
+    {
+        if (laserImg.gameObject.activeSelf == false)
+        {
+            curLaserMoveTime = 0;
+            laserImg.fillAmount = 0f;
+        }
+
+        // 새로 만든 레이저
+        curLaserMoveTime += Time.deltaTime;
+        laserImg.fillAmount = curLaserMoveTime / 1.5f;
     }
 
     // 레이저 발사
     void LaserShoot()
     {
+        float laserShowTime = 0f;
+
         if (!isPlayerDead && !isLaserShoot)
         {
-            // 레이저 최고 쿨타임 이상이면
-            if (curLaserCoolTime > maxLaserCoolTime)
+            isLaserShoot = true;
+            
+            if (curLaserCoolTime > maxLaserCoolTime)            // 레이저 최고 쿨타임 이상이면
             {
-                LaserShow(3);
+                laserShowTime = 3f;     // 3초 사용
             }
-            // 레이저 최고 쿨타임의 2/3 이상이면
-            else if (curLaserCoolTime > maxLaserCoolTime/1.5f)
+            else if (curLaserCoolTime > maxLaserCoolTime/1.5f)  // 레이저 최고 쿨타임의 2/3 이상이면
             {
-                LaserShow(2);
+                laserShowTime = 6f;     // 6초 사용
             }
-            // 레이저 최고 쿨타임의 1/3  이상이면
-            else if (curLaserCoolTime > maxLaserCoolTime/3f)
+            else if (curLaserCoolTime > maxLaserCoolTime/3f)    // 레이저 최고 쿨타임의 1/3  이상이면
             {
-                LaserShow(1);
+                laserShowTime = 9f;     // 9초 사용
             }
+
+            laserImg.gameObject.SetActive(true);
+
+            //laser.SetActive(true);                              // 레이저 보이기
+            objectManager.itmeShieldSound.Play();               // 레이저 나타날 때 사운드 효과
+            Invoke("LaserHide", laserShowTime);
         }
        
-    }
-
-    // 레이저 발사
-    void LaserShow(int laserLevel)
-    {
-        curLaserCoolTime = 0;         // 레이저 쿨타임 0으로 초기화
-        isLaserShoot = true;                    // 레이저 발사중임을 설정
-
-        float laserShowTime = 0;      // 레이저 사용 시간 설정 변수
-
-        if (laserLevel == 1)
-        {
-            laserShowTime = 3f;     // 3초 사용
-            //hpSlider.image.color = new Color(1, 0, 0, 1);
-        }
-        else if (laserLevel == 2)
-        {
-            laserShowTime = 6f;     // 6초 사용
-            //hpSlider.image.color = new Color(0, 1, 0, 1);
-        }
-        else if (laserLevel == 3)
-        {
-            laserShowTime = 9f;     // 9초 사용
-            //hpSlider.image.color = new Color(0, 0, 1, 1);
-        }
-
-        float maxLaserSize = 10f;
-
-        laserImg.fillAmount = curBulletShootTime / maxLaserSize; 
-        laser.SetActive(true);                  // 레이저 보이기
-        objectManager.itmeShieldSound.Play();   // 레이저 나타날 때 사운드 효과
-        Invoke("LaserHide", laserShowTime);                // 레이저 숨기기
     }
 
     // 레이저 숨기기
     void LaserHide()
     {
         isLaserShoot = false;
-        laser.SetActive(false);
+        laserImg.fillAmount = 0;
+        laserImg.gameObject.SetActive(false);
+
+        //laser.SetActive(false);
     }
 
     // 단축키 F10 으로 배경음악 켜고/끄기

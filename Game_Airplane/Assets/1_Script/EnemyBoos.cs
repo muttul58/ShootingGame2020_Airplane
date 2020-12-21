@@ -250,7 +250,6 @@ public class EnemyBoos : MonoBehaviour
                 bulletCode = collision.gameObject.GetComponent<Bullet>();
                 hitDmg = bulletCode.dmg;
                 hp -= hitDmg;
-
             }
 
             if (hp <= 0)
@@ -276,6 +275,7 @@ public class EnemyBoos : MonoBehaviour
 
             if (laserDelay <= 0)
             {
+                bulletCode = collision.gameObject.GetComponent<Bullet>();
                 hp -= bulletCode.dmg;
 
                 Effect("H"); // Hit Effect
@@ -296,7 +296,7 @@ public class EnemyBoos : MonoBehaviour
                 GameManager.isGameClear = true;
                 //Invoke("GameManger.GameClear", 5f);
                               // Debug.Log("점수 : " + GameManager.gameScore);
-                Debug.Log("Boss isGameClear : " + GameManager.isGameClear);
+                //Debug.Log("Boss isGameClear : " + GameManager.isGameClear);
 
             }
         }
@@ -333,7 +333,7 @@ public class EnemyBoos : MonoBehaviour
                          transform.rotation );
 
         }
-        // Coin 아이템 10개
+        // Coin 아이템 100개
         for (int j = 0; j < 100; j++)
         {
             float posX = Random.Range(-3.0f, 3.0f);
