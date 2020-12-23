@@ -52,6 +52,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
+        // enemy Hpbar 생성
         HPbar = Instantiate(HpBar_Basic) as Slider;
         HPbar.transform.SetParent(GameObject.Find("EnemyHpBar_Canvas").transform);
         HPbar.transform.SetAsFirstSibling();
