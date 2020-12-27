@@ -5,16 +5,15 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    public int laserDmg;
     public float speed;
     public float bulletSpeed;
 
-    public static int power;
+    public static int power;            // 총알 업그레이드 1,2,3
     public static int life;
     public static int boomCount;
-    public int bulletType;
+    public int bulletType;              // 1: 직사형,  2: 방사형
 
-    public float maxBulletShootTime;
+    public float maxBulletShootTime;    // 총알 나가는 간격
     public float curBulletShootTime;
     
     public float maxPowerPoint;
@@ -22,12 +21,6 @@ public class Player : MonoBehaviour
 
 
     public float curLaserMoveTime;     // 레이저가 점점 길어지는 효과 시간
-
-
-    public float maxLaserTime;
-    public float curLaserTime;
-
-    public float maxLaserSize;
 
     public bool isTouchTop;
     public bool isTouchBottom;
@@ -40,10 +33,10 @@ public class Player : MonoBehaviour
     public bool isBGSound;
 
     public GameObject shield;
-    public GameObject laser;
-    public Laser laserCode;
+    public GameObject laser;        // 레이저 오브젝트
+    public Laser laserCode;         // 레이지 스크립트
 
-    public Image powerGauge;
+    public Image powerGauge;    
 
     public ObjectManager objectManager;
     public GameManager gameManager;
@@ -145,7 +138,7 @@ public class Player : MonoBehaviour
         // 플레이어 죽음 : Shield가 꺼진 상태로 적과 총알에 맞은 경우
         else if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
-            gameManager.curLaserCoolTime = 0;
+            laserCode.curLaserCoolTime = 0;
             laserCode.isLaserShoot = false;
             curPowerPoint = 0;             // Power 업그레드 점수 0 초기화
             isPlayerDead = true;        // Player 사망
@@ -274,6 +267,10 @@ public class Player : MonoBehaviour
     // 총알 발사
     void BulletShoot()
     {
+        // 레이저 발사 이면 총알 발사 안됨
+        if (laserCode.isLaserShoot)
+            return;
+
         // 스페이스 키 누르면 총알 발사
         if (!Input.GetKey("space"))
             return;

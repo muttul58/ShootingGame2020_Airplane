@@ -11,17 +11,11 @@ public class GameManager : MonoBehaviour
     public float maxSpawnTime;
     public float curSpawnTime;
 
-    public float maxLaserCoolTime;  // 레이저 최고 쿨타임
-    public float curLaserCoolTime;  // 레이저 현재 쿨타임
-    
-    public Image laserGauge;        // 레이저 게이지 이미지
-
     public static int gameScore;
 
     public bool isGameOver;
     public static bool isGameClear;
     public bool isBoosPlay;
-       
     
     public GameObject player;
     //public Player playerCode;
@@ -39,8 +33,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        maxLaserCoolTime = 3f;    // 1분, 2분, 3분 이 지나면 레이저 사용가능 
-                                   // 3초, 6초, 9초 사용 가능
+
     }
 
     void Update()
@@ -58,8 +51,6 @@ public class GameManager : MonoBehaviour
         // 게임 클리어시 UI 표시
         if (isGameClear && gameClear.activeSelf == false) Invoke("GameClear", 20f);
 
-        // 레이저 게이지 표시
-        LaserCoolTime();
     }
 
     void EnemySpawn()
@@ -214,20 +205,6 @@ public class GameManager : MonoBehaviour
     public void GameQuit()
     {
         Application.Quit();
-    }
-
-
-    // 레이저 슬라이드 max 값, value 값 초기화
-    void LaserCoolTime()
-    {
-        if (Player.isPlayerDead == true || laserCode.isLaserShoot == true)
-        {
-            curLaserCoolTime = 0f;
-            laserGauge.fillAmount = 0f;
-        }
-
-        curLaserCoolTime += Time.deltaTime;
-        laserGauge.fillAmount = curLaserCoolTime / maxLaserCoolTime;
     }
 
 }

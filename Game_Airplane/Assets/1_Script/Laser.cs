@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class Laser : MonoBehaviour
 {
     public int laserDmg;
@@ -9,10 +9,14 @@ public class Laser : MonoBehaviour
     public float laserScale;
     public bool isLaserShoot;       // 레이저 발사 상태
     public bool isHitEnemy;
+    public float maxLaserCoolTime;  // 레이저 최고 쿨타임
+    public float curLaserCoolTime;  // 레이저 현재 쿨타임
 
     float laserShowTime;
+    public Image laserGauge;        // 레이저 게이지 이미지
 
     public GameObject player;
+
     //public Player playerCode;
     public ObjectManager objectManager;
     public GameManager gameManager;
@@ -22,6 +26,9 @@ public class Laser : MonoBehaviour
     void Start()
     {
         lr = GetComponent<LineRenderer>();
+
+        maxLaserCoolTime = 3f;    // 1분, 2분, 3분 이 지나면 레이저 사용가능 
+                                  // 3초, 6초, 9초 사용 가능
     }
 
     void Update()
@@ -31,6 +38,9 @@ public class Laser : MonoBehaviour
             LaserLengthenTime();
             LaserLineRenderer();
         }
+
+        // 레이저 게이지 표시
+        LaserCoolTime();
     }
 
 /*    void HotKey()
@@ -43,33 +53,29 @@ public class Laser : MonoBehaviour
     public void LaserShoot()
     {
 
-        Debug.Log("Player.isPlayerDead :  " + Player.isPlayerDead + ",      isLaserShoot : " + isLaserShoot);
-
-        if (gameManager.curLaserCoolTime <= gameManager.maxLaserCoolTime / 3f) return;
-
+        //if (curLaserCoolTime <= maxLaserCoolTime / 3f) return;
 
         if (!Player.isPlayerDead && !isLaserShoot)
         {
 
-            if (gameManager.curLaserCoolTime > gameManager.maxLaserCoolTime)            // 레이저 최고 쿨타임 이상이면
+            if (curLaserCoolTime > maxLaserCoolTime)            // 레이저 최고 쿨타임 이상이면
             {
                 laserShowTime = 9f;     // 9초 사용
             }
-            else if (gameManager.curLaserCoolTime > gameManager.maxLaserCoolTime / 1.5f)  // 레이저 최고 쿨타임의 2/3 이상이면
+            else if (curLaserCoolTime > maxLaserCoolTime / 1.5f)  // 레이저 최고 쿨타임의 2/3 이상이면
             {
                 laserShowTime = 6f;     // 6초 사용
             }
-            else if (gameManager.curLaserCoolTime > gameManager.maxLaserCoolTime / 3f)    // 레이저 최고 쿨타임의 1/3  이상이면
+            else if (curLaserCoolTime > maxLaserCoolTime / 3f)    // 레이저 최고 쿨타임의 1/3  이상이면
             {
                 laserShowTime = 3f;     // 3초 사용
             }
 
-
-            isLaserShoot = true;
-            gameManager.curLaserCoolTime = 0;
-            lr.enabled = isLaserShoot;
-            objectManager.itmeShieldSound.Play();               // 레이저 나타날 때 사운드 효과
-            Invoke("LaserHide", laserShowTime);
+            isLaserShoot = true;                    // 레이저 발사 함
+            curLaserCoolTime = 0;                   // 레이저 쿨타임 초기화 0
+            lr.enabled = isLaserShoot;              // LineRenderer 활성화
+            objectManager.itmeShieldSound.Play();   // 레이저 나타날 때 사운드 효과
+            Invoke("LaserHide", laserShowTime);     // LineRenderer 비활성화
         }
 
     }
@@ -131,5 +137,18 @@ public class Laser : MonoBehaviour
         laserScale += Time.deltaTime * 100f;
     }
 
+
+    // 레이저 슬라이드 max 값, value 값 초기화
+    void LaserCoolTime()
+    {
+        if (Player.isPlayerDead == true || isLaserShoot == true)
+        {
+            curLaserCoolTime = 0f;
+            laserGauge.fillAmount = 0f;
+        }
+
+        curLaserCoolTime += Time.deltaTime;
+        laserGauge.fillAmount = curLaserCoolTime / maxLaserCoolTime;
+    }
 
 }

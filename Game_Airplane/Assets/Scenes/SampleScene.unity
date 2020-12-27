@@ -2045,11 +2045,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a10ee1c62a1201946874c6be18b76c2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laserDmg: 0
+  laserDmg: 3
   maxLaserScale: 0
   laserScale: 0
   isLaserShoot: 0
   isHitEnemy: 0
+  maxLaserCoolTime: 0
+  curLaserCoolTime: 0
+  laserGauge: {fileID: 1881934134}
   player: {fileID: 1932259071}
   objectManager: {fileID: 1738409656}
   gameManager: {fileID: 1903074187}
@@ -9914,9 +9917,6 @@ MonoBehaviour:
   speed: 4
   maxSpawnTime: 2
   curSpawnTime: 0
-  maxLaserCoolTime: 30
-  curLaserCoolTime: 0
-  laserGauge: {fileID: 1881934134}
   isGameOver: 1
   isBoosPlay: 0
   player: {fileID: 1932259071}
@@ -10257,7 +10257,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ada11321bb29894da1b9510004957b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  laserDmg: 0
   speed: 3
   bulletSpeed: 3
   bulletType: 1
@@ -10266,9 +10265,6 @@ MonoBehaviour:
   maxPowerPoint: 0
   curPowerPoint: 0
   curLaserMoveTime: 0
-  maxLaserTime: 9
-  curLaserTime: 0
-  maxLaserSize: 0
   isTouchTop: 0
   isTouchBottom: 0
   isTouchRight: 0
