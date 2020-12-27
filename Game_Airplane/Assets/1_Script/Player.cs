@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
+    public int laserDmg;
     public float speed;
     public float bulletSpeed;
 
@@ -19,14 +20,13 @@ public class Player : MonoBehaviour
     public float maxPowerPoint;
     public float curPowerPoint;// 플레이어 Power를 Up 하기위한 점수 2000이상이면 Power +1
 
-    public float maxLaserCoolTime;
-    public float curLaserCoolTime;
+
     public float curLaserMoveTime;     // 레이저가 점점 길어지는 효과 시간
 
 
     public float maxLaserTime;
     public float curLaserTime;
-    public bool isLaserShoot;
+
     public float maxLaserSize;
 
     public bool isTouchTop;
@@ -41,10 +41,8 @@ public class Player : MonoBehaviour
 
     public GameObject shield;
     public GameObject laser;
-    public Image laserImg;
-    public Canvas laserCanvas;
+    public Laser laserCode;
 
-    public Image laserGauge;
     public Image powerGauge;
 
     public ObjectManager objectManager;
@@ -65,21 +63,31 @@ public class Player : MonoBehaviour
         isBGSound = true;
         isPlayerDead = true;
         maxPowerPoint = 2000f;
-        maxLaserCoolTime = 15f;    // 1분, 2분, 3분 이 지나면 레이저 사용가능 
-                                   // 3초, 6초, 9초 사용 가능
     }
 
     void Update()
     {
         PowerCoolTime();
-        LaserCoolTime();
-        LaserMoveTime();    // 레이저가 점점 길어지는 시간 2초
         PlayerMove();       // 플레이어 이동
         BulletShoot();      // 플레이어 총알 발사
         Reload();           // 총알 리노드
         HotKey();
-        
-        laserCanvas.transform.position = gameObject.transform.position;
+    }
+
+    // 단축키 설정
+    void HotKey()
+    {
+        if      (Input.GetKeyDown(KeyCode.F1)) bulletType = 1;
+        else if (Input.GetKeyDown(KeyCode.F2)) bulletType = 2;
+        else if (Input.GetKeyDown(KeyCode.F5)) power = 1;
+        else if (Input.GetKeyDown(KeyCode.F6)) power = 2;
+        else if (Input.GetKeyDown(KeyCode.F7)) power = 3;
+        else if (Input.GetKeyDown(KeyCode.F9)) ShieldShow();
+        else if (Input.GetKeyDown(KeyCode.F10)) BGSoundOnOff();
+        else if (Input.GetKeyDown(KeyCode.F12)) GameManager.GameScoreUp(100000);
+        else if (Input.GetKeyDown(KeyCode.L)) laserCode.LaserShoot();
+        else if (Input.GetKeyDown(KeyCode.S)) ShieldHotKey();
+        else if (Input.GetKeyDown(KeyCode.B)) if (boomCount > 0) BoomShow();
     }
 
 
@@ -137,11 +145,12 @@ public class Player : MonoBehaviour
         // 플레이어 죽음 : Shield가 꺼진 상태로 적과 총알에 맞은 경우
         else if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
-            curLaserCoolTime = 0;
+            gameManager.curLaserCoolTime = 0;
+            laserCode.isLaserShoot = false;
             curPowerPoint = 0;             // Power 업그레드 점수 0 초기화
             isPlayerDead = true;        // Player 사망
-            laser.SetActive(false);     // Player 가 죽으면 Laser도 안보이게 설정
-
+            laser.GetComponent<Laser>().LaserHide();
+            
             gameObject.SetActive(false);
             objectManager.deadPlayerSound.Play();
             GameObject eff = Instantiate(objectManager.deadPlayerEffect, transform.position, transform.rotation);
@@ -395,21 +404,6 @@ public class Player : MonoBehaviour
         curBulletShootTime += Time.deltaTime;
     }
 
-    // 단축키 설정
-    void HotKey()
-    {
-        if (Input.GetKeyDown(KeyCode.F1)) bulletType = 1;
-        if (Input.GetKeyDown(KeyCode.F2)) bulletType = 2;
-        if (Input.GetKeyDown(KeyCode.F5)) power = 1;
-        if (Input.GetKeyDown(KeyCode.F6)) power = 2;
-        if (Input.GetKeyDown(KeyCode.F7)) power = 3;
-        if (Input.GetKeyDown(KeyCode.B)) if(boomCount>0) BoomShow();
-        if (Input.GetKeyDown(KeyCode.S)) ShieldHotKey();
-        if (Input.GetKeyDown(KeyCode.F9)) ShieldShow();
-        if (Input.GetKeyDown(KeyCode.F10)) BGSoundOnOff();
-        if (Input.GetKeyDown(KeyCode.L)) LaserShoot();
-        if (Input.GetKeyDown(KeyCode.F12)) GameManager.GameScoreUp(100000);
-    }
 
     // 단축키 'B'로 폭탄 켜고/끄기
     void BoomShow()
@@ -500,72 +494,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    // 레이저 슬라이드 max 값, value 값 초기화
-    void LaserCoolTime()
-    {
-        if (isPlayerDead == true || isLaserShoot == true)
-        {
-            curLaserCoolTime = 0;
-            laserGauge.fillAmount = 0f;
-        }
 
-        curLaserCoolTime += Time.deltaTime;
-        laserGauge.fillAmount = curLaserCoolTime / maxLaserCoolTime;
-    }
-
-    void LaserMoveTime()
-    {
-        if (laserImg.gameObject.activeSelf == false)
-        {
-            curLaserMoveTime = 0;
-            laserImg.fillAmount = 0f;
-        }
-
-        // 새로 만든 레이저
-        curLaserMoveTime += Time.deltaTime;
-        laserImg.fillAmount = curLaserMoveTime / 1.5f;
-    }
-
-    // 레이저 발사
-    void LaserShoot()
-    {
-        float laserShowTime = 0f;
-
-        if (!isPlayerDead && !isLaserShoot)
-        {
-            isLaserShoot = true;
-            
-            if (curLaserCoolTime > maxLaserCoolTime)            // 레이저 최고 쿨타임 이상이면
-            {
-                laserShowTime = 3f;     // 3초 사용
-            }
-            else if (curLaserCoolTime > maxLaserCoolTime/1.5f)  // 레이저 최고 쿨타임의 2/3 이상이면
-            {
-                laserShowTime = 6f;     // 6초 사용
-            }
-            else if (curLaserCoolTime > maxLaserCoolTime/3f)    // 레이저 최고 쿨타임의 1/3  이상이면
-            {
-                laserShowTime = 9f;     // 9초 사용
-            }
-
-            laserImg.gameObject.SetActive(true);
-
-            //laser.SetActive(true);                              // 레이저 보이기
-            objectManager.itmeShieldSound.Play();               // 레이저 나타날 때 사운드 효과
-            Invoke("LaserHide", laserShowTime);
-        }
-       
-    }
-
-    // 레이저 숨기기
-    void LaserHide()
-    {
-        isLaserShoot = false;
-        laserImg.fillAmount = 0;
-        laserImg.gameObject.SetActive(false);
-
-        //laser.SetActive(false);
-    }
 
     // 단축키 F10 으로 배경음악 켜고/끄기
     public void BGSoundOnOff()
@@ -587,7 +516,6 @@ public class Player : MonoBehaviour
     {
         transform.position = new Vector3(0, -4, 0);
         gameObject.SetActive(true);
-        laser.SetActive(false);
         isPlayerDead = false;
     }
 

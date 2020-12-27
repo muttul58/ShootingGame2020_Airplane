@@ -61,6 +61,7 @@ MonoBehaviour:
   isLaserHit: 0
   laserDelay: 0
   player: {fileID: 0}
+  playerCode: {fileID: 0}
   objectManager: {fileID: 0}
   spriteRenderer: {fileID: 0}
 --- !u!212 &3077451827320326852

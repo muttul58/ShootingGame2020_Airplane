@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5708181295329538017}
   - component: {fileID: -7109175685362069977}
   - component: {fileID: 2010106839856273715}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ItemShield
   m_TagString: ItemShield
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ SpriteRenderer:
   m_Size: {x: 0.8888889, y: 0.8888889}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!60 &5708181295329538017

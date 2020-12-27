@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3912479169858787676}
   - component: {fileID: -7202014848442907286}
   - component: {fileID: -5060388277938371595}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: ItemBoom
   m_TagString: ItemBoom
   m_Icon: {fileID: 0}

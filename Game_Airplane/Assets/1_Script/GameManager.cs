@@ -10,13 +10,21 @@ public class GameManager : MonoBehaviour
     public float speed;
     public float maxSpawnTime;
     public float curSpawnTime;
+
+    public float maxLaserCoolTime;  // 레이저 최고 쿨타임
+    public float curLaserCoolTime;  // 레이저 현재 쿨타임
+    
+    public Image laserGauge;        // 레이저 게이지 이미지
+
     public static int gameScore;
 
     public bool isGameOver;
     public static bool isGameClear;
     public bool isBoosPlay;
-
+       
+    
     public GameObject player;
+    //public Player playerCode;
     public GameObject gameOverSet;
     public GameObject gameStart;
     public GameObject gameClear;
@@ -26,22 +34,32 @@ public class GameManager : MonoBehaviour
     public Text gameScoreText;
 
     public ObjectManager objectManager;
+    public Laser laserCode;
 
 
     private void Start()
     {
-
+        maxLaserCoolTime = 3f;    // 1분, 2분, 3분 이 지나면 레이저 사용가능 
+                                   // 3초, 6초, 9초 사용 가능
     }
 
     void Update()
     {
+        // 게임 점수 표시
         gameScoreText.text = string.Format("{0:n0}", gameScore);
+        
+        // 일반 적(보스 빼고)
         if (!isBoosPlay)
         {
             EnemySpawn();
             ReSpawn();
         }
+
+        // 게임 클리어시 UI 표시
         if (isGameClear && gameClear.activeSelf == false) Invoke("GameClear", 20f);
+
+        // 레이저 게이지 표시
+        LaserCoolTime();
     }
 
     void EnemySpawn()
@@ -55,7 +73,7 @@ public class GameManager : MonoBehaviour
         if (curSpawnTime < maxSpawnTime)
             return;
 
-        if(gameScore <= 1000)
+        if(gameScore <= 100000)
         {
             maxSpawnTime = Random.Range(1.2f, 2.0f);
         
@@ -196,6 +214,20 @@ public class GameManager : MonoBehaviour
     public void GameQuit()
     {
         Application.Quit();
+    }
+
+
+    // 레이저 슬라이드 max 값, value 값 초기화
+    void LaserCoolTime()
+    {
+        if (Player.isPlayerDead == true || laserCode.isLaserShoot == true)
+        {
+            curLaserCoolTime = 0f;
+            laserGauge.fillAmount = 0f;
+        }
+
+        curLaserCoolTime += Time.deltaTime;
+        laserGauge.fillAmount = curLaserCoolTime / maxLaserCoolTime;
     }
 
 }

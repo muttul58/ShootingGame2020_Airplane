@@ -22,6 +22,7 @@ public class Enemy : MonoBehaviour
 
     public Sprite[] sprites;    // 플레이어 총알에 맞는 효과용
 
+    public bool isHit;          // 플레이어 총알에 맞은 경우
     public bool isLaserHit;     // 플레이어 Laser에 맞은 것 확인
     public float laserDelay;    // Laser에 맞으면 Delay 시간 마다 HP 감소
 
@@ -35,6 +36,7 @@ public class Enemy : MonoBehaviour
 
 
     Bullet bulletCode;
+    Laser laserCode;
 
     void Awake()
     {
@@ -44,6 +46,8 @@ public class Enemy : MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
         playerCode = GameObject.Find("Player").GetComponent<Player>();
+
+        
 
         Rigidbody2D rigid = GetComponent<Rigidbody2D>();
         rigid.velocity = Vector3.down * speed;
@@ -70,6 +74,8 @@ public class Enemy : MonoBehaviour
 
         HpBar_Setting();
         HPbar_SetActive();
+
+        EnemyIsHitLaser();
     }
 
 
@@ -125,14 +131,23 @@ public class Enemy : MonoBehaviour
     // 멀리있는 적의 HPbar 안보기게 하기
     void HPbar_SetActive()
     {
-        Collider2D[] hitCol = Physics2D.OverlapCircleAll(gameObject.transform.position, 6f);
         HPbar.gameObject.SetActive(false);
+        // 플레이어 총알 또는 레이저에 맞으면 HPbar 나타남
+        // isHit 가 true 이면
 
-        for(int i = 0; i< hitCol.Length; i++)
-        {
-            if (hitCol[i].gameObject.name == "Player")
-                HPbar.gameObject.SetActive(true);
-        }
+        if (isHit) HPbar.gameObject.SetActive(true);
+
+        /*
+                // 플레이어가 가까이(6f) 오면 HPbar 나타나는 코드
+                Collider2D[] hitCol = Physics2D.OverlapCircleAll(gameObject.transform.position, 6f);
+                HPbar.gameObject.SetActive(false);
+
+                for(int i = 0; i< hitCol.Length; i++)
+                {
+                    if (hitCol[i].gameObject.name == "Player")
+                        HPbar.gameObject.SetActive(true);
+                }
+        */
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -157,10 +172,12 @@ public class Enemy : MonoBehaviour
         // 플레이어 총알에 맞으면
         else if(collision.gameObject.tag == "PlayerBullet" || collision.gameObject.tag == "Laser")
         {
-            if (hp == 0) return;
+            if (hp == 0) return;        // 죽은 경우
+
+            if(!isHit) isHit = true;    // 플레이어 총알이나 레이저에 맞은 경우
+
             ScoreUp(10);  // 점수 누적
-            if (collision.gameObject.tag != "Laser")
-                Destroy(collision.gameObject);  // 총알 소멸
+            Destroy(collision.gameObject);  // 총알 소멸
             Effect("H"); // Hit Effect
 
 
@@ -185,15 +202,16 @@ public class Enemy : MonoBehaviour
     }
 
     // 레이저가 적에게 충돌 상태이면
-    private void OnTriggerStay2D(Collider2D collision)
+    void EnemyIsHitLaser()
     {
-        if (collision.gameObject.tag == "Laser")
+        //Debug.Log("10번 enemy isLaserHit " + isLaserHit);
+        if (isLaserHit)
         {
-            isLaserHit = true;
-
+            //Debug.Log("20번 enemy isLaserHit " + isLaserHit);
             if (laserDelay <= 0)
             {
-                hp -= bulletCode.dmg;
+                laserCode = GameObject.Find("Laser").GetComponent<Laser>();
+                hp -= laserCode.laserDmg;
 
                 spriteRenderer.sprite = sprites[1];
                 Invoke("EnemySpriteSwap", 0.1f);
@@ -215,7 +233,13 @@ public class Enemy : MonoBehaviour
                 ItemDrop();   // 아이템 랜덤 생성
                               // Debug.Log("점수 : " + GameManager.gameScore);
             }
+            isLaserHit = false;
         }
+        else
+        {
+            laserDelay = 0.1f;
+        }
+
     }
 
     void EnemySpriteSwap()
@@ -223,15 +247,6 @@ public class Enemy : MonoBehaviour
         spriteRenderer.sprite = sprites[0];
     }
 
-    // 레이저가 적에게 떯어진 상태이면
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.tag == "Laser")
-        {
-            isLaserHit = false;
-            laserDelay = 0.1f;
-        }
-    }
 
     // 아이템 랜덤 생성
     void ItemDrop()
@@ -263,7 +278,7 @@ public class Enemy : MonoBehaviour
 
         objectManager.deadEnemySound.Play();  // 파괴 소리 재생
         // 파괴 이팩트 
-        GameObject deadEff = Instantiate(objectManager.deadEnemyEffect[index], transform.position, transform.rotation);
+        GameObject deadEff = Instantiate(objectManager.deadEnemyEffect[index], transform.position+Vector3.down *0.5f, transform.rotation);
         
         Destroy(deadEff, desTime);  // 1.5초 후 파괴 이팩트 소멸
     }
