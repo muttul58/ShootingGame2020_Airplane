@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyBoos : MonoBehaviour
+public class EnemyBoss : MonoBehaviour
 {
 
     public float speed;
@@ -30,6 +30,8 @@ public class EnemyBoos : MonoBehaviour
     public bool isLaserHit;     // 플레이어 Laser에 맞은 것 확인
     public float laserDelay;    // Laser에 맞으면 Delay 시간 마다 HP 감소
 
+
+
     public GameObject gameManager;
     public GameObject player;
     public Player playerCode;
@@ -38,6 +40,7 @@ public class EnemyBoos : MonoBehaviour
 
     Animator animator;
     Bullet bulletCode;
+    Laser laserCode;
 
     void Awake()
     {
@@ -49,6 +52,8 @@ public class EnemyBoos : MonoBehaviour
 
         player = GameObject.FindWithTag("Player");
         playerCode = GameObject.Find("Player").GetComponent<Player>();
+
+        laserCode = GameObject.Find("Laser").GetComponent<Laser>();
 
         Rigidbody2D rigid = GetComponent<Rigidbody2D>();
         rigid.velocity = Vector3.down * speed;
@@ -67,6 +72,12 @@ public class EnemyBoos : MonoBehaviour
         HPbar.maxValue = hp;
 
         Think();
+    }
+
+    void Update()
+    {
+        HpBar_Setting();
+        EnemyIsHitLaser();
     }
 
     void Think()
@@ -219,10 +230,6 @@ public class EnemyBoos : MonoBehaviour
         rigid.velocity = Vector2.zero;
     }
 
-    void Update()
-    {
-        HpBar_Setting();
-    }
 
     // 적 HpBar 초기화
     void HpBar_Setting()
@@ -261,46 +268,49 @@ public class EnemyBoos : MonoBehaviour
                 ScoreUp(enemyScore);        // 점수 누적
                 ItemDrop();                 // 아이템 랜덤 생성
                 GameManager.isGameClear = true;
-                //Invoke("GameManger.GameClear", 5f);   
             }
         }
     }
 
     // 레이저가 적에게 충돌 상태이면
-    private void OnTriggerStay2D(Collider2D collision)
+    // 적이 레이저에 맞은 상태이면
+    void EnemyIsHitLaser()
     {
-        if (collision.gameObject.tag == "Laser")
+        // 적이 레이저에 맞은 상태이면
+        if (isLaserHit)
         {
-            isLaserHit = true;
-
-            if (laserDelay <= 0)
+            // 적에게 데미지 적용 시간이 되면
+            if (laserDelay > 0.1f)
             {
-                bulletCode = collision.gameObject.GetComponent<Bullet>();
-                hp -= bulletCode.dmg;
+                // 레이저 로직에 있는 laserDmg 가져와서 적 hp 감소
+                laserCode = GameObject.Find("Laser").GetComponent<Laser>();
+                hp -= laserCode.laserDmg;
+
+                //spriteRenderer.sprite = sprites[1];     // 레이저에 맞으면 번쩍이는 효과
+                Invoke("EnemySpriteSwap", 0.1f);
 
                 Effect("H"); // Hit Effect
-                laserDelay = 0.1f;
+                laserDelay = 0f;
             }
             else
             {
-                laserDelay -= Time.deltaTime;
+                laserDelay += Time.deltaTime;   // 적 데이지 적용 시간 누적
             }
 
+            // 적의 hp가 0이면
             if (hp <= 0)
             {
-                Destroy(HPbar.gameObject);
-                Destroy(gameObject);
-                GameManager.gameScore += enemyScore;  // 점수 누적
-                Effect("D");  // Dead Effect
-                ItemDrop();   // 아이템 랜덤 생성
-                GameManager.isGameClear = true;
-                //Invoke("GameManger.GameClear", 5f);
-                              // Debug.Log("점수 : " + GameManager.gameScore);
-                //Debug.Log("Boss isGameClear : " + GameManager.isGameClear);
-
+                Destroy(gameObject);        // 적 소멸
+                Destroy(HPbar.gameObject);  // 적 HPbar 소멸
+                ScoreUp(enemyScore);        // 점수 누적  
+                Effect("D");                // Dead Effect
+                ItemDrop();                 // 아이템 랜덤 생성
             }
+
+            isLaserHit = false;             // 레이저의 데미지를 적용시기키 위해 Hit를 true, false 한다
         }
     }
+
 
     // 레이저가 적에게 떯어진 상태이면
     private void OnTriggerExit2D(Collider2D collision)

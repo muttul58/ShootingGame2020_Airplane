@@ -7,7 +7,8 @@ public class ObjectManager : MonoBehaviour
     public GameObject playerBulletObjA;
     public GameObject playerBulletObjB;
     public GameObject playerBulletObjL;
-    public GameObject playerBoomObj;
+
+    public GameObject petBulletObj; // 펫 총알
 
     public GameObject enemyBulletObjL;
     public GameObject enemyBulletObjM;

@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 8923101257985874006}
   - component: {fileID: 4355938250452414317}
   m_Layer: 2
-  m_Name: ItemPower
-  m_TagString: ItemPower
+  m_Name: ItemPet
+  m_TagString: ItemPet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -142,12 +142,15 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.20833334, y: 0.33333334}
-      - {x: -0.33333334, y: 0.2916667}
-      - {x: -0.33333334, y: -0.25}
-      - {x: -0.25, y: -0.33333334}
-      - {x: 0.33333334, y: -0.33333334}
-      - {x: 0.33333334, y: 0.33333334}
+    - - {x: -0.16787076, y: 0.2558244}
+      - {x: -0.32996142, y: 0.12148391}
+      - {x: -0.32996142, y: -0.1253116}
+      - {x: -0.17581859, y: -0.24739948}
+      - {x: -0.033654664, y: -0.24636354}
+      - {x: 0.28883573, y: -0.16959576}
+      - {x: 0.32982308, y: -0.117701665}
+      - {x: 0.32490367, y: 0.118240684}
+      - {x: 0.16473925, y: 0.25750935}
 --- !u!50 &4355938250452414317
 Rigidbody2D:
   serializedVersion: 4

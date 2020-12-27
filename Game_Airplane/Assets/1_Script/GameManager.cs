@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
         }
 
         // 게임 클리어시 UI 표시
-        if (isGameClear && gameClear.activeSelf == false) Invoke("GameClear", 20f);
+        if (isGameClear && gameClear.activeSelf == false) Invoke("GameClear", 12f);
 
     }
 

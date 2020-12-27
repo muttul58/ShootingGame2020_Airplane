@@ -32,6 +32,9 @@ public class Player : MonoBehaviour
     public bool isShield;
     public bool isBGSound;
 
+    public bool isPetL;
+    public bool isPetR;
+
     public GameObject shield;
     public GameObject laser;        // 레이저 오브젝트
     public Laser laserCode;         // 레이지 스크립트
@@ -40,6 +43,9 @@ public class Player : MonoBehaviour
 
     public ObjectManager objectManager;
     public GameManager gameManager;
+
+    public GameObject petLObj;
+    public GameObject petRObj;
 
     private void Awake()
     {
@@ -140,11 +146,18 @@ public class Player : MonoBehaviour
         {
             laserCode.curLaserCoolTime = 0;
             laserCode.isLaserShoot = false;
-            curPowerPoint = 0;             // Power 업그레드 점수 0 초기화
-            isPlayerDead = true;        // Player 사망
+            curPowerPoint = 0;              // Power 업그레드 점수 0 초기화
+            isPlayerDead = true;            // Player 사망
+
             laser.GetComponent<Laser>().LaserHide();
-            
-            gameObject.SetActive(false);
+
+            if (petLObj.gameObject.activeSelf == true)          // 펫 숨기기
+                petLObj.gameObject.SetActive(false);
+            if (petRObj.gameObject.activeSelf == true)
+                petRObj.gameObject.SetActive(false);
+
+            gameObject.SetActive(false);    // 플레이서 숨기기
+
             objectManager.deadPlayerSound.Play();
             GameObject eff = Instantiate(objectManager.deadPlayerEffect, transform.position, transform.rotation);
             Destroy(eff, 1.5f);
@@ -163,21 +176,20 @@ public class Player : MonoBehaviour
                 Invoke("ReloadPlayer", 2f);
 
         }
-/*
-        // Power(파워) 아이템을 먹은 경우
-        else if (collision.gameObject.tag == "ItemPower")
+
+        // Pet(펫) 아이템을 먹은 경우
+        else if (collision.gameObject.tag == "ItemPet")
         {
-            power++;
+            if (petLObj.gameObject.activeSelf == false)
+                petLObj.gameObject.SetActive(true);
+            else if (petRObj.gameObject.activeSelf == false)
+                petRObj.gameObject.SetActive(true);
+            else GameManager.GameScoreUp(500);
+
             objectManager.itmePowerSound.Play();
             Destroy(collision.gameObject);
-
-            if (power > 3)
-            {
-                power = 3;
-                GameManager.GameScoreUp(500);
-            }
         }
-*/
+
         // Life(생명) 아이템을 먹은 경우
         else if (collision.gameObject.tag == "ItemLife")
         {

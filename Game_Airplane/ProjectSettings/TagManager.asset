@@ -21,6 +21,8 @@ TagManager:
   - EnemyBullet
   - EnemyB
   - ItemCoin
+  - Pet
+  - ItemPet
   layers:
   - Default
   - TransparentFX

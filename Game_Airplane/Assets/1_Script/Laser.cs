@@ -27,37 +27,28 @@ public class Laser : MonoBehaviour
     {
         lr = GetComponent<LineRenderer>();
 
-        maxLaserCoolTime = 3f;    // 1분, 2분, 3분 이 지나면 레이저 사용가능 
-                                  // 3초, 6초, 9초 사용 가능
+        maxLaserCoolTime = 30f;     // 10초, 20초, 30초 지나면 레이저 사용가능 
+                                    // 3초, 6초, 9초 사용 가능
     }
 
     void Update()
     {
         if (isLaserShoot)
         {
-            LaserLengthenTime();
-            LaserLineRenderer();
+            LaserLengthenTime();    // 레이저 길어지는 시간
+            LaserLineRenderer();    // 라인렌더러 실생
         }
 
         // 레이저 게이지 표시
         LaserCoolTime();
     }
 
-/*    void HotKey()
-    {
-        if (Input.GetKeyDown(KeyCode.L)) LaserShoot();
-    }*/
-
-
     // 레이저 발사
     public void LaserShoot()
     {
-
-        //if (curLaserCoolTime <= maxLaserCoolTime / 3f) return;
-
+        // 플레이어가 죽지 않고 레이저가 나가지 않은 상태이면
         if (!Player.isPlayerDead && !isLaserShoot)
         {
-
             if (curLaserCoolTime > maxLaserCoolTime)            // 레이저 최고 쿨타임 이상이면
             {
                 laserShowTime = 9f;     // 9초 사용
@@ -80,19 +71,19 @@ public class Laser : MonoBehaviour
 
     }
 
+    // 레이저 숨기기
     public void LaserHide()
-    { // 레이저 숨기기
-
-        isLaserShoot = false;
-        lr.enabled = isLaserShoot;
+    { 
+        isLaserShoot = false;       // 레이저 숨기기
+        lr.enabled = isLaserShoot;  // 라인 렌더러 비활성화
     }
 
-
+    // 라인렌더러 동작
     void LaserLineRenderer()
     {
-        if (!isLaserShoot)
+        if (!isLaserShoot)  // 현재 레이저가 나가지 않은 상태
         {
-            laserScale = 0;
+            laserScale = 0; // 레이저 길이를 0을 설정 후 종료
             return;
         }
 
@@ -108,13 +99,20 @@ public class Laser : MonoBehaviour
         // hit는 충돌한 Object의 정보를 저장, 이 if문에서는 'Ray에 충돌한 Object의 정보'가 있는지 체크
         if (hit.collider)
         {
-            if (hit.collider.tag == "Enemy")
+            // 레이저에 다은 것이 적이면
+            if (hit.collider.tag == "Enemy" || hit.collider.tag == "EnemyB")
             {
-
                 // 적 데미지 적용
-                Enemy enemy = hit.collider.GetComponent<Enemy>();
-                enemy.isLaserHit = true;
-                
+                if (hit.collider.tag == "Enemy")
+                {
+                    Enemy enemy = hit.collider.GetComponent<Enemy>();
+                    enemy.isLaserHit = true;
+                }
+                else
+                {
+                    EnemyBoss enemyB = hit.collider.GetComponent<EnemyBoss>();
+                    enemyB.isLaserHit = true;
+                }
                 // LineRenderer(레이저 선, 하얀 선) 의 끝 위치를 hit.point으로 설정
                 lr.SetPosition(1, hit.point);
             }

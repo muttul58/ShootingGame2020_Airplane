@@ -153,7 +153,7 @@ public class Enemy : MonoBehaviour
     void OnTriggerEnter2D(Collider2D collision)
     {
         // 화면 밖으로 나가거나 플레이어에 다으면 소멸
-        if(collision.gameObject.tag == "BorderEnemy" || collision.gameObject.tag == "Player")
+        if(collision.gameObject.tag == "BorderEnemy" || collision.gameObject.tag == "Player" || collision.gameObject.tag == "Pet")
         {
             Destroy(gameObject);
             Destroy(HPbar.gameObject);
@@ -201,47 +201,45 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // 레이저가 적에게 충돌 상태이면
+    // 적이 레이저에 맞은 상태이면
     void EnemyIsHitLaser()
     {
-        //Debug.Log("10번 enemy isLaserHit " + isLaserHit);
+        // 적이 레이저에 맞은 상태이면
         if (isLaserHit)
         {
-            //Debug.Log("20번 enemy isLaserHit " + isLaserHit);
-            if (laserDelay <= 0)
+            // 적에게 데미지 적용 시간이 되면
+            if (laserDelay > 0.1f)
             {
+                // 레이저 로직에 있는 laserDmg 가져와서 적 hp 감소
                 laserCode = GameObject.Find("Laser").GetComponent<Laser>();
                 hp -= laserCode.laserDmg;
 
-                spriteRenderer.sprite = sprites[1];
+                spriteRenderer.sprite = sprites[1];     // 레이저에 맞으면 번쩍이는 효과
                 Invoke("EnemySpriteSwap", 0.1f);
 
                 Effect("H"); // Hit Effect
-                laserDelay = 0.1f;
+                laserDelay = 0f;
             }
             else
             {
-                laserDelay -= Time.deltaTime;
+                laserDelay += Time.deltaTime;   // 적 데이지 적용 시간 누적
             }
 
+            // 적의 hp가 0이면
             if (hp <= 0)
             {
-                Destroy(gameObject);
-                Destroy(HPbar.gameObject);
-                ScoreUp(enemyScore);  // 점수 누적
-                Effect("D");  // Dead Effect
-                ItemDrop();   // 아이템 랜덤 생성
-                              // Debug.Log("점수 : " + GameManager.gameScore);
+                Destroy(gameObject);        // 적 소멸
+                Destroy(HPbar.gameObject);  // 적 HPbar 소멸
+                ScoreUp(enemyScore);        // 점수 누적  
+                Effect("D");                // Dead Effect
+                ItemDrop();                 // 아이템 랜덤 생성
             }
-            isLaserHit = false;
-        }
-        else
-        {
-            laserDelay = 0.1f;
-        }
 
+            isLaserHit = false;             // 레이저의 데미지를 적용시기키 위해 Hit를 true, false 한다
+        }
     }
 
+    // 총알이나 레이저에 맞으면 번쩍이는 효과를 주기위해 스프라이트 변경
     void EnemySpriteSwap()
     {
         spriteRenderer.sprite = sprites[0];
@@ -251,6 +249,7 @@ public class Enemy : MonoBehaviour
     // 아이템 랜덤 생성
     void ItemDrop()
     {
+        // 아래 확률로 아이템 생성
         int ran = Random.Range(0, 10);
         int itemIndex = 0;
         if (ran < 2) return;
@@ -259,12 +258,14 @@ public class Enemy : MonoBehaviour
         else if (ran < 8) itemIndex = 2;
         else itemIndex = 3;
 
+        // 오브젝트 메니저에 있는 아이템 생성
         Instantiate(objectManager.itemObjs[itemIndex], transform.position, transform.rotation);
     }
 
     // 적 파괴 이팩트 
     void Effect(string type)
     {
+        // 적 이름에 따라 파괴 이팩트 다르게 적용
         float desTime = 1.5f;
         int index=0;
         if (enemyName == "L") index = 0;
@@ -283,11 +284,11 @@ public class Enemy : MonoBehaviour
         Destroy(deadEff, desTime);  // 1.5초 후 파괴 이팩트 소멸
     }
 
+    // 게임 점수 누적
     void ScoreUp(int score)
     {
-        GameManager.gameScore += score;    // 게임 점수 누적
-        //Debug.Log("적에서 점수 받음 : " + score);
-        playerCode.PowerUpPoint(score);         // 플레이어 총알 업그레이드 용 점수
+        GameManager.gameScore += score;     // 게임 점수 누적
+        playerCode.PowerUpPoint(score);     // 플레이어 총알 업그레이드 용 점수
     }
 
 }
