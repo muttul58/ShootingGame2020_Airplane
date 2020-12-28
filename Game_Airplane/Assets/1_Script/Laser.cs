@@ -43,6 +43,7 @@ public class Laser : MonoBehaviour
         LaserCoolTime();
     }
 
+
     // 레이저 발사
     public void LaserShoot()
     {
@@ -61,7 +62,11 @@ public class Laser : MonoBehaviour
             {
                 laserShowTime = 3f;     // 3초 사용
             }
-
+            else
+            {
+                return;
+            }
+            
             isLaserShoot = true;                    // 레이저 발사 함
             curLaserCoolTime = 0;                   // 레이저 쿨타임 초기화 0
             lr.enabled = isLaserShoot;              // LineRenderer 활성화
@@ -73,7 +78,9 @@ public class Laser : MonoBehaviour
 
     // 레이저 숨기기
     public void LaserHide()
-    { 
+    {
+        // 레이저 사용 후 쿨타임 초기화
+        curLaserCoolTime = 0;
         isLaserShoot = false;       // 레이저 숨기기
         lr.enabled = isLaserShoot;  // 라인 렌더러 비활성화
     }
@@ -127,6 +134,8 @@ public class Laser : MonoBehaviour
         // LineRenderer(레이저 선, 하얀 선) 의 끝 위치를 player.transform.position.y + laserScale.y으로 설정
         else 
             lr.SetPosition(1, new Vector3(player.transform.position.x, player.transform.position.y + laserScale, 0));
+        
+
     }
 
 
@@ -139,12 +148,14 @@ public class Laser : MonoBehaviour
     // 레이저 슬라이드 max 값, value 값 초기화
     void LaserCoolTime()
     {
+        // 플레이어가 죽거나, 레이저는 사용한 경우 초기화
         if (Player.isPlayerDead == true || isLaserShoot == true)
         {
             curLaserCoolTime = 0f;
             laserGauge.fillAmount = 0f;
         }
 
+        // 시간 누적
         curLaserCoolTime += Time.deltaTime;
         laserGauge.fillAmount = curLaserCoolTime / maxLaserCoolTime;
     }

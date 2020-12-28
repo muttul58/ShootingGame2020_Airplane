@@ -4,51 +4,35 @@ using UnityEngine;
 
 public class ObjectManager : MonoBehaviour
 {
-    public GameObject playerBulletObjA;
-    public GameObject playerBulletObjB;
-    public GameObject playerBulletObjL;
+    public GameObject playerBulletObjA;     // 플레이어 총알 A형
+    public GameObject playerBulletObjB;     // 플레이어 총알 B형
+    public GameObject playerBulletObjL;     // 플레이어 총알 L형
 
-    public GameObject petBulletObj; // 펫 총알
+    public GameObject petBulletObj;         // 펫 총알
 
-    public GameObject enemyBulletObjL;
-    public GameObject enemyBulletObjM;
-    public GameObject enemyBulletObjS;
-    public GameObject enemyBulletObjB;
+    public GameObject enemyBulletObjL;      // EnemyL 총알
+    public GameObject enemyBulletObjM;      // EnemyM 총알
+    public GameObject enemyBulletObjS;      // EnemyS 총알
+    public GameObject enemyBulletObjB;      // Boss 총알
 
-    public GameObject[] enemyObj;
+    public GameObject[] enemyObj;           // Enemy 오브젝트 배열
 
-    public GameObject[] deadEnemyEffect;
-    public GameObject deadPlayerEffect;
-    public GameObject boomEffect;
-    
+    public GameObject[] deadEnemyEffect;    // 적 파괴 이팩 배열
+    public GameObject deadPlayerEffect;     // 플레이어 파괴 이팩트
+    public GameObject boomEffect;           // 폭탄 이팩트
+
     // 0: Life,  1: Shield,  2: Power,  3: Boom
-    public GameObject[] itemObjs;
+    public GameObject[] itemObjs;           // 아이템 오프젝트 배열
 
-    public AudioSource backgroundSound;
-    public AudioSource bulletShootSound;
-    public AudioSource LaserShootSound;
-    public AudioSource boomPlayerSound;
+    public AudioSource backgroundSound;     // 배경 음악
+    public AudioSource bulletShootSound;    // 총알 발사 소리
+    public AudioSource LaserShootSound;     // 레이저 발사 소리
+    public AudioSource boomPlayerSound;     // 폭탄 터지는 소리
 
-    public AudioSource deadPlayerSound;
-    public AudioSource deadEnemySound;
+    public AudioSource deadPlayerSound;     // 플레이어 파괴 소리
+    public AudioSource deadEnemySound;      // 적 파괴 소리
 
-    public AudioSource itmeShieldSound;
-    public AudioSource itmePowerSound;
-    public AudioSource itmeLifeSound;
-    
-    
-    
-
-
-
-
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
+    public AudioSource itmeShieldSound;     // 쉴드 아이템 소리
+    public AudioSource itmePowerSound;      // 파워 아이템 소리
+    public AudioSource itmeLifeSound;       // 생명 아이템 소리
 }

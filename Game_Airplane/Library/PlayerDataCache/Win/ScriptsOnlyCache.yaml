@@ -5,19 +5,15 @@ ScriptsOnlyBuild:
     - BackGroundSound
     - Bullet
     - Enemy
-    - EnemyBoos
+    - EnemyBoss
     - GameManager
     - Item
+    - Laser
     - ObjectManager
+    - Pet
     - Player
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
-    UnityEditor.Graphs.dll:
-    - UnityEditor.Graphs.AnimationBlendTree.Graph
-    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.Graph
-    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -76,36 +72,42 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11232}
     - Class: 114
-      Script: {instanceID: 11252}
+      Script: {instanceID: 11254}
     - Class: 114
-      Script: {instanceID: 11418}
+      Script: {instanceID: 11278}
     - Class: 114
-      Script: {instanceID: 11458}
+      Script: {instanceID: 11422}
     - Class: 114
-      Script: {instanceID: 11502}
+      Script: {instanceID: 11462}
     - Class: 114
-      Script: {instanceID: 11568}
+      Script: {instanceID: 11506}
     - Class: 114
-      Script: {instanceID: 11854}
+      Script: {instanceID: 11574}
     - Class: 114
-      Script: {instanceID: 11858}
+      Script: {instanceID: 11860}
     - Class: 114
-      Script: {instanceID: 12022}
+      Script: {instanceID: 11864}
     - Class: 114
-      Script: {instanceID: 12198}
+      Script: {instanceID: 12028}
     - Class: 114
-      Script: {instanceID: 12244}
+      Script: {instanceID: 12066}
     - Class: 114
-      Script: {instanceID: 12328}
+      Script: {instanceID: 12206}
     - Class: 114
-      Script: {instanceID: 12430}
+      Script: {instanceID: 12252}
     - Class: 114
-      Script: {instanceID: 12750}
+      Script: {instanceID: 12336}
     - Class: 114
-      Script: {instanceID: 12784}
+      Script: {instanceID: 12438}
     - Class: 114
-      Script: {instanceID: 13110}
+      Script: {instanceID: 12758}
+    - Class: 114
+      Script: {instanceID: 12792}
+    - Class: 114
+      Script: {instanceID: 13118}
     - Class: 115
+      Script: {instanceID: 0}
+    - Class: 120
       Script: {instanceID: 0}
     - Class: 128
       Script: {instanceID: 0}
@@ -152,6 +154,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
     className: TMP_SelectionCaret
+  - hash:
+      serializedVersion: 2
+      Hash: 8416e346a007a0be1562b2363b825c6e
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Pet
   - hash:
       serializedVersion: 2
       Hash: 87ff43d2baf3385cba327d8f803a4ebb
@@ -232,7 +240,7 @@ ScriptsOnlyBuild:
     className: TMP_InputField
   - hash:
       serializedVersion: 2
-      Hash: 2b57fb6e4835eb4329d297d2c2574e3f
+      Hash: 34331351b847acfd6ffbda611671b66a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Player
@@ -256,7 +264,7 @@ ScriptsOnlyBuild:
     className: SignalAsset
   - hash:
       serializedVersion: 2
-      Hash: 85250ba498b40dfd0cee0c8cdeb332f2
+      Hash: 491c51901e27032a68478cfb290f6a10
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: BackGround
@@ -316,7 +324,7 @@ ScriptsOnlyBuild:
     className: Shadow
   - hash:
       serializedVersion: 2
-      Hash: 9cd224ad94de77da342b81db3afa3a33
+      Hash: f6cdfce042dbd14cc64d0f697972f8bd
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Enemy
@@ -364,6 +372,12 @@ ScriptsOnlyBuild:
     className: ScrollRect
   - hash:
       serializedVersion: 2
+      Hash: 1693917f487e96eefb02d82dc91cf07b
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Laser
+  - hash:
+      serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -382,7 +396,7 @@ ScriptsOnlyBuild:
     className: RemoteTestResultSender
   - hash:
       serializedVersion: 2
-      Hash: d650dd461e285c666cea18152d151154
+      Hash: 09b9aeb4ddc7a3b2fbb9961de809de69
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ObjectManager
@@ -394,7 +408,7 @@ ScriptsOnlyBuild:
     className: TextContainer
   - hash:
       serializedVersion: 2
-      Hash: 471b4bf182f9512c6cd0d00b83e1f1ae
+      Hash: 399587197c47849a5468a7d9f0d0f990
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager
@@ -496,10 +510,10 @@ ScriptsOnlyBuild:
     className: BeforeAfterTestCommandState
   - hash:
       serializedVersion: 2
-      Hash: 669e6ff8cbe7288239799266305eaa73
+      Hash: 9afb4eb0cddc37c2e333e4d813f634ec
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: EnemyBoos
+    className: EnemyBoss
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
@@ -605,4 +619,4 @@ ScriptsOnlyBuild:
   platform: 5
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
-  playerPath: D:/Seagate/SynologyDrive/GitHub/ShootingGame2020_Airplane/Game_Airplane/11_Build/ST_Build_1220_0948_800x1000/Game_Airplane.exe
+  playerPath: "D:/Seagate/SynologyDrive/GitHub/ShootingGame2020_Airplane/Game_Airplane/11_Build/ST_Build_1228_1242_1\uCC28_\uC644\uC131(800x1000)/Game_Airplane.exe"

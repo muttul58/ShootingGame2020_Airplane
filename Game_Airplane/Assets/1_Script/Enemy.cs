@@ -33,8 +33,6 @@ public class Enemy : MonoBehaviour
     public ObjectManager objectManager;
     public SpriteRenderer spriteRenderer;
 
-
-
     Bullet bulletCode;
     Laser laserCode;
 
@@ -170,7 +168,7 @@ public class Enemy : MonoBehaviour
         }
 
         // 플레이어 총알에 맞으면
-        else if(collision.gameObject.tag == "PlayerBullet" || collision.gameObject.tag == "Laser")
+        else if(collision.gameObject.tag == "PlayerBullet")
         {
             if (hp == 0) return;        // 죽은 경우
 
@@ -179,7 +177,6 @@ public class Enemy : MonoBehaviour
             ScoreUp(10);  // 점수 누적
             Destroy(collision.gameObject);  // 총알 소멸
             Effect("H"); // Hit Effect
-
 
             // 총알코드 가져오기
             bulletCode = collision.gameObject.GetComponent<Bullet>();
@@ -215,7 +212,7 @@ public class Enemy : MonoBehaviour
                 hp -= laserCode.laserDmg;
 
                 spriteRenderer.sprite = sprites[1];     // 레이저에 맞으면 번쩍이는 효과
-                Invoke("EnemySpriteSwap", 0.1f);
+                Invoke("EnemySpriteSwap", 0.1f);        // 원래 색으로 변경
 
                 Effect("H"); // Hit Effect
                 laserDelay = 0f;
@@ -244,7 +241,6 @@ public class Enemy : MonoBehaviour
     {
         spriteRenderer.sprite = sprites[0];
     }
-
 
     // 아이템 랜덤 생성
     void ItemDrop()
@@ -290,5 +286,4 @@ public class Enemy : MonoBehaviour
         GameManager.gameScore += score;     // 게임 점수 누적
         playerCode.PowerUpPoint(score);     // 플레이어 총알 업그레이드 용 점수
     }
-
 }
