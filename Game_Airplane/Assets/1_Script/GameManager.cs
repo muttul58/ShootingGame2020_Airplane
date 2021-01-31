@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         // 게임 점수 표시
-        gameScoreText.text = string.Format("{0:n0}", gameScore);
+        GameScoreShow();
         
         // 일반 적(보스 빼고)
         if (!isBossPlay)
@@ -126,7 +126,7 @@ public class GameManager : MonoBehaviour
         curSpawnTime += Time.deltaTime;
     }
 
-    // 왼쪽 위 플레이어 생명 표시(플레이어가 보너스 먹음 또는 죽으면 업데이트)
+    // 왼쪽 위 플레이어 생명 표시(플레이어가 Life 아이템 획득 또는 죽으면 업데이트)
     public void PlayerLifeSet(int life)
     {
         // 모든 이미지의 알파값을 0으로 만들어 안보이게 함
@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
             lifeImages[i].color = new Color(1, 1, 1, 1);
     }
 
-    // 오른쪽 위 폭탄 표시 업데이트
+    // 오른쪽 위 폭탄 표시(플레이어가 Boom 아이템을 획득 또는 사용하면 업데이트)
     public void PlayerBoomSet(int boom)
     {
         // 모든 이미지의 알파값을 0으로 만들어 안보이게 함
@@ -167,14 +167,15 @@ public class GameManager : MonoBehaviour
     // 게임 종료 또는 클리어 후 다시 시작하기
     public void GameReStart()
     {
+        // 씬 0 실행
+        SceneManager.LoadScene(0);
+
         if (isGameClear)  // 게임 클리어 이면
         {
             isGameClear = false;
             gameClear.SetActive(false);
             Time.timeScale = 1; 
         }
-        // 씬 0 실행
-        SceneManager.LoadScene(0);
     }
 
     // 게임 클리어 UI 표시
@@ -242,6 +243,23 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0;  // 게임 일시 중지
                 gameInfo.SetActive(true);
             }
+        }
+    }
+
+    // 게임 점수 표시
+    public void GameScoreShow()
+    {
+        if (!isGameClear)  // 게임 클리어가 아니면 위쪽 중앙에 표시
+        {
+            gameScoreText.transform.position = new Vector2(400f, 1000f);    // 텍스트 위치 설정 
+            gameScoreText.transform.localScale = new Vector2(1f, 1f);       // 텍스트 크기 설정
+            gameScoreText.text = string.Format("{0:n0}", gameScore);        // 출력 형식 설정
+        }
+        else
+        {
+            gameScoreText.transform.position = new Vector2(400f, 650f);
+            gameScoreText.transform.localScale = new Vector2(2f, 2f);
+            gameScoreText.text = string.Format("{0:n0}", gameScore);
         }
     }
 }

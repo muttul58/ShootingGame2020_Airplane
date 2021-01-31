@@ -1,0 +1,29 @@
+
+기능키 
+
+F1 : 직선 공결
+F2 : 방사형 공격
+F3 : 레이저 풀 충전
+
+F5 : Power 1
+F6 : Power 2 
+F7 : Power 3
+
+F10 : 배경음악 On / Off
+F12 : Boss 생성
+
+P : 펫 생성
+B : 폭탄 발사
+L : 레이저 발사
+S : 쉴드 On / Off
+
+레이저(Laser) : 10초 충전 - 3초 발사
+                20초 충천 - 6초 발사
+                30초 충전 - 9초 발사
+
+총알(Power) : 기본 Power 1
+              Power 포인트 2000점 => Power 2
+              Power 포인트 5000점 => Power 3
+
+펫(Pet) : Item P 를 먹으면 펫 생성 총 2대( 좌, 우 )
+        

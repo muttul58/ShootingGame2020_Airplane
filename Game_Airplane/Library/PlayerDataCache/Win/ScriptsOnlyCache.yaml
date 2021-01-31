@@ -72,39 +72,39 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11232}
     - Class: 114
-      Script: {instanceID: 11254}
+      Script: {instanceID: 11252}
     - Class: 114
-      Script: {instanceID: 11278}
+      Script: {instanceID: 11276}
     - Class: 114
-      Script: {instanceID: 11422}
+      Script: {instanceID: 11420}
     - Class: 114
-      Script: {instanceID: 11462}
+      Script: {instanceID: 11460}
     - Class: 114
-      Script: {instanceID: 11506}
+      Script: {instanceID: 11504}
     - Class: 114
-      Script: {instanceID: 11574}
+      Script: {instanceID: 11570}
+    - Class: 114
+      Script: {instanceID: 11856}
     - Class: 114
       Script: {instanceID: 11860}
     - Class: 114
-      Script: {instanceID: 11864}
+      Script: {instanceID: 12024}
     - Class: 114
-      Script: {instanceID: 12028}
+      Script: {instanceID: 12062}
     - Class: 114
-      Script: {instanceID: 12066}
+      Script: {instanceID: 12202}
     - Class: 114
-      Script: {instanceID: 12206}
+      Script: {instanceID: 12248}
     - Class: 114
-      Script: {instanceID: 12252}
+      Script: {instanceID: 12332}
     - Class: 114
-      Script: {instanceID: 12336}
+      Script: {instanceID: 12434}
     - Class: 114
-      Script: {instanceID: 12438}
+      Script: {instanceID: 12754}
     - Class: 114
-      Script: {instanceID: 12758}
+      Script: {instanceID: 12788}
     - Class: 114
-      Script: {instanceID: 12792}
-    - Class: 114
-      Script: {instanceID: 13118}
+      Script: {instanceID: 13114}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 120
@@ -240,7 +240,7 @@ ScriptsOnlyBuild:
     className: TMP_InputField
   - hash:
       serializedVersion: 2
-      Hash: 34331351b847acfd6ffbda611671b66a
+      Hash: e1c1be91650dd2af3913fd36a319627d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: Player
@@ -360,7 +360,7 @@ ScriptsOnlyBuild:
     className: Selectable
   - hash:
       serializedVersion: 2
-      Hash: 86ca5fe06d9d4f9f26c54213da081cd4
+      Hash: 5661e20fc10c014955216d0eaa7c35ac
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: BackGroundSound
@@ -408,7 +408,7 @@ ScriptsOnlyBuild:
     className: TextContainer
   - hash:
       serializedVersion: 2
-      Hash: 399587197c47849a5468a7d9f0d0f990
+      Hash: 5d1eb078590bbb2d9e6f5b6311993785
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: GameManager
@@ -619,4 +619,4 @@ ScriptsOnlyBuild:
   platform: 5
   scenePathNames:
   - Assets/Scenes/SampleScene.unity
-  playerPath: "D:/Seagate/SynologyDrive/GitHub/ShootingGame2020_Airplane/Game_Airplane/11_Build/ST_Build_1228_1242_1\uCC28_\uC644\uC131(800x1000)/Game_Airplane.exe"
+  playerPath: D:/Seagate/SynologyDrive/GitHub/11_Build_ShootingGame2020_Airplane/ST_Build_1230_2132_V1.01(800x1000)/Game_Airplane.exe

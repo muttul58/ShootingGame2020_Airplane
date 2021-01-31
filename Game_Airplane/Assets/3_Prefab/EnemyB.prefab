@@ -48,12 +48,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1.5
-  hp: 100
-  hitDmg: 50
+  hp: 500
   enemyScore: 10000
   enemyName: B
   maxShootTime: 0
   curShootTime: 0
+  bulletSpeed: 0
   patternIndex: -1
   curPatternCount: 0
   maxPatternCount: 0500000003000000630000000a000000

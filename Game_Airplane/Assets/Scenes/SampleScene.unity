@@ -410,11 +410,11 @@ RectTransform:
   m_Father: {fileID: 49131236}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -492}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: -9}
   m_SizeDelta: {x: 800, y: 35}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &119795422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -783,7 +783,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.4811321, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0.3301887, b: 0.004737636, a: 0.39215687}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1087,7 +1087,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 801fbf46894544c47bc4e6cb7eb6274d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgSoundImgs: []
   sprite:
   - {fileID: 21300000, guid: fe868c81a53e19c4e97dc6498602d1af, type: 3}
   - {fileID: 21300000, guid: 91b375af628ac1443b5c68affde22bda, type: 3}
@@ -2293,7 +2292,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 78}
+  m_AnchoredPosition: {x: 0, y: 247}
   m_SizeDelta: {x: 700, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &918460000
@@ -2486,7 +2485,7 @@ MonoBehaviour:
   isHitEnemy: 0
   maxLaserCoolTime: 0
   curLaserCoolTime: 0
-  laserGauge: {fileID: 1881934134}
+  laserGauge: {fileID: 0}
   player: {fileID: 1932259071}
   objectManager: {fileID: 1738409656}
   gameManager: {fileID: 1903074187}
@@ -2999,7 +2998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 1, b: 0, a: 0.39215687}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:

@@ -25,15 +25,15 @@ public class EnemyBoss : MonoBehaviour
     public bool isLaserHit;         // 플레이어 Laser에 맞은 것 확인
     public float laserDelay;        // Laser에 맞으면 Delay 시간 마다 HP 감소
 
-    public GameObject gameManager;
-    public GameObject player;
-    public Player playerCode;
-    public ObjectManager objectManager;
-    public SpriteRenderer spriteRenderer;
+    public GameObject gameManager;          // 게임메니저 GameObject 가져오기
+    public GameObject player;               // 플레이어 GameObject 가져오기
+    public Player playerCode;               // 플레이어 Logic 가져오기
+    public ObjectManager objectManager;     // ObjectManager Logic 가져오기
+    public SpriteRenderer spriteRenderer;   // SpriteRenderer Component 가져오기
 
-    Animator animator;
-    Bullet bulletCode;
-    Laser laserCode;
+    Animator animator;              // 보스가 플레이어 총알에 맞은 경우 애니메이션 플레이용
+    Bullet bulletCode;              // 총알 Logic 가져오기
+    Laser laserCode;                // 레이저 Logic 가져오기
 
     void Awake()
     {
@@ -48,6 +48,7 @@ public class EnemyBoss : MonoBehaviour
 
         laserCode = GameObject.Find("Laser").GetComponent<Laser>();
 
+        // 보스가 생성되면 아래 방향으로 speed 속도록 이동
         Rigidbody2D rigid = GetComponent<Rigidbody2D>();
         rigid.velocity = Vector3.down * speed;
 
@@ -74,8 +75,8 @@ public class EnemyBoss : MonoBehaviour
 
     void Update()
     {
-        HpBar_Setting();
-        EnemyIsHitLaser();
+        HpBar_Setting();        // 보스 HpBar 초기화
+        EnemyIsHitLaser();      // 
     }
 
     void Think()
@@ -176,7 +177,6 @@ public class EnemyBoss : MonoBehaviour
             Invoke("Think", 6);
     }
 
-
     // 원 형태로 전체 공격
     void FireAround()
     {
@@ -217,6 +217,7 @@ public class EnemyBoss : MonoBehaviour
     // 보스가 활성화 되면 2초 후에 정지
     void OnEnable()
     {
+        // 내려오던 보스 정지 함수 호출
         Invoke("EnemyBossStop", 1.3f);    // 보스 이동 정지
     }
 
@@ -326,7 +327,7 @@ public class EnemyBoss : MonoBehaviour
                          transform.rotation );
 
         }
-        // Coin 아이템 100개(기준 좋으라고)
+        // 보너스 코인 : Coin 아이템 100개(기준 좋으라고) 
         for (int j = 0; j < 100; j++)
         {
             float posX = Random.Range(-3.0f, 3.0f);

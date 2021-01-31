@@ -130,19 +130,14 @@ public class Player : MonoBehaviour
                     break;
             }
         }
-        // Shield가 켜진 상태로 보스에 다으면
-        else if (isShield && (collision.gameObject.tag == "EnemyB"))
-        {
-            //Destroy(collision.gameObject);
-            ScoreUp(100);       // 점수 계산
-        }
 
         // Shield가 켜진 상태로 적과 총알에 맞은 경우
-        else if (isShield && (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet"))
+        else if (isShield &&  collision.gameObject.tag == "EnemyBullet")
         {
             Destroy(collision.gameObject);
-            ScoreUp(100);       // 점수 계산
+            //ScoreUp(100);       // 점수 계산
         }
+
         // 플레이어 죽음 : Shield가 꺼진 상태로 적과 총알에 맞은 경우
         else if (collision.gameObject.tag == "Enemy" || collision.gameObject.tag == "EnemyBullet")
         {
@@ -179,24 +174,6 @@ public class Player : MonoBehaviour
 
         }
 
-        // Pet(펫) 아이템을 먹은 경우
-        else if (collision.gameObject.tag == "ItemPet")
-        {
-            // 왼쪽 펫이 없으면 나타남
-            if (petLObj.gameObject.activeSelf == false)
-                petLObj.gameObject.SetActive(true);
-            // 왼쪽 펫이 있고, 오른쪽 펫이 없으면 나타남
-            else if (petRObj.gameObject.activeSelf == false)
-                petRObj.gameObject.SetActive(true);
-            // 둘다 있으면 점수 +500
-            else GameManager.GameScoreUp(500);
-
-            // 펫 효과음 실행
-            objectManager.itmePowerSound.Play();
-            // 펫 아이템 소멸
-            Destroy(collision.gameObject);
-        }
-
         // Life(생명) 아이템을 먹은 경우
         else if (collision.gameObject.tag == "ItemLife")
         {
@@ -205,7 +182,7 @@ public class Player : MonoBehaviour
             Destroy(collision.gameObject);      // 생명 아이템 소멸
 
             if (life > 3)                       // 생명 3보다 크면
-            {   
+            {
                 life = 3;                       // 생명 3으로 설정
                 ScoreUp(500);                   // 점수 +500
             }
@@ -213,18 +190,6 @@ public class Player : MonoBehaviour
             {
                 gameManager.PlayerLifeSet(life);   // 화면 왼쪽 위 생명 UI이 수정 
             }
-        }
-
-        // Shield(쉴드) 아이템을 먹은 경우
-        else if (collision.gameObject.tag == "ItemShield")
-        {
-            objectManager.itmeShieldSound.Play(); // 효과음 재생
-            Destroy(collision.gameObject);
-
-            if (isShield)           // 이미 쉴드 사용중이면
-                ScoreUp(500);       // 점수 +500
-            else                    // 쉴드 사용하지 않으면
-                ShieldShow();       // 쉴드 나타남
         }
 
         // Boom(폭탄) 아이템을 먹은 경우
@@ -244,6 +209,37 @@ public class Player : MonoBehaviour
                 gameManager.PlayerBoomSet(boomCount);
             }
         }
+
+        // Pet(펫) 아이템을 먹은 경우
+        else if (collision.gameObject.tag == "ItemPet")
+        {
+            // 왼쪽 펫이 없으면 나타남
+            if (petLObj.gameObject.activeSelf == false)
+                petLObj.gameObject.SetActive(true);
+            // 왼쪽 펫이 있고, 오른쪽 펫이 없으면 나타남
+            else if (petRObj.gameObject.activeSelf == false)
+                petRObj.gameObject.SetActive(true);
+            // 둘다 있으면 점수 +500
+            else GameManager.GameScoreUp(500);
+
+            // 펫 효과음 실행
+            objectManager.itmePowerSound.Play();
+            // 펫 아이템 소멸
+            Destroy(collision.gameObject);
+        }
+
+        // Shield(쉴드) 아이템을 먹은 경우
+        else if (collision.gameObject.tag == "ItemShield")
+        {
+            objectManager.itmeShieldSound.Play(); // 효과음 재생
+            Destroy(collision.gameObject);
+
+            if (isShield)           // 이미 쉴드 사용중이면
+                ScoreUp(500);       // 점수 +500
+            else                    // 쉴드 사용하지 않으면
+                ShieldShow();       // 쉴드 나타남
+        }
+
 
         // Coin(코인) 아이템을 먹은 경우
         else if (collision.gameObject.tag == "ItemCoin")
@@ -489,7 +485,7 @@ public class Player : MonoBehaviour
         powerGauge.fillAmount = curPowerPoint / maxPowerPoint;
     }
 
-    // 플레이어 총알 업그레이드용 
+    //-0 플레이어 총알 업그레이드용 
     public void PowerUpPoint(int enemyScore)
     {
         if (power < 3)  // power이 3보다 작은 경우

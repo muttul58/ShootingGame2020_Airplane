@@ -7,7 +7,7 @@ public class BackGroundSound : MonoBehaviour
 {
     // GameManager에 포함됨.
 
-    public Image[] bgSoundImgs;             // 화면 오른쪽 위 스피커 모양 이미지
+    //public Image[] bgSoundImgs;             // 화면 오른쪽 위 스피커 모양 이미지
     public Sprite[] sprite;                 // 소리 재생, 정지 이미지
     public Button BGIconButton;             // 버튼으로 만들어 클릭 되게 만듬
 

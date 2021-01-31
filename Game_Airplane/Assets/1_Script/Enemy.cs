@@ -1,9 +1,9 @@
-﻿using System.Collections;
+﻿// Enemy.cs 코드
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
-
 
 public class Enemy : MonoBehaviour
 {
@@ -15,7 +15,6 @@ public class Enemy : MonoBehaviour
     public float maxShootTime;
     public float curShootTime;
 
-
     // HPbar 표시에 사용
     public Slider HPbar;  // 생성된 HPbar
     public Slider HpBar_Basic;  // 프리팹으로 할당 한 HpBar
@@ -26,15 +25,15 @@ public class Enemy : MonoBehaviour
     public bool isLaserHit;     // 플레이어 Laser에 맞은 것 확인
     public float laserDelay;    // Laser에 맞으면 Delay 시간 마다 HP 감소
 
-    public GameObject player;
-    public Player playerCode;
-    public static bool playerDead;
+    public GameObject player;   // 플레이어 GameObject 가져오기
+    public Player playerCode;   // 플레이어 Logic 가져오기
+    public static bool playerDead;  // 플레이어가 죽은 상태 확인
 
-    public ObjectManager objectManager;
-    public SpriteRenderer spriteRenderer;
+    public ObjectManager objectManager; // ObjectManager Logic 가져오기
+    public SpriteRenderer spriteRenderer;  // SpriteRenderer Component 가져오기
 
-    Bullet bulletCode;
-    Laser laserCode;
+    Bullet bulletCode;  // Bullet Logic 가져오기
+    Laser laserCode;    // Laser  Logic 가져오기
 
     void Awake()
     {
@@ -45,11 +44,9 @@ public class Enemy : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerCode = GameObject.Find("Player").GetComponent<Player>();
 
-        
-
+        // Rigidbody2D로 아래 방향(Vector3.down)으로 speed 속도로 이동 하도록 함
         Rigidbody2D rigid = GetComponent<Rigidbody2D>();
         rigid.velocity = Vector3.down * speed;
-        
     }
 
     void Start()
@@ -157,20 +154,10 @@ public class Enemy : MonoBehaviour
             Destroy(HPbar.gameObject);
         }
 
-        // 쉴드에 다이면
-        else if(collision.gameObject.tag == "Shield")
-        {
-            Destroy(gameObject);
-            Destroy(HPbar.gameObject);
-            ScoreUp(enemyScore);  // 점수 누적
-            Effect("D");  // Dead Effect
-            ItemDrop();   // 아이템 랜덤 생성
-        }
-
         // 플레이어 총알에 맞으면
         else if(collision.gameObject.tag == "PlayerBullet")
         {
-            if (hp == 0) return;        // 죽은 경우
+            if (hp <= 0) return;        // 죽은 경우
 
             if(!isHit) isHit = true;    // 플레이어 총알이나 레이저에 맞은 경우
 
@@ -181,11 +168,10 @@ public class Enemy : MonoBehaviour
             // 총알코드 가져오기
             bulletCode = collision.gameObject.GetComponent<Bullet>();
 
-            hp -= bulletCode.dmg;
-            spriteRenderer.sprite = sprites[1];
-            Invoke("EnemySpriteSwap", 0.1f);
+            hp -= bulletCode.dmg;                // 적 hp dmg 만큼 감소 
+            spriteRenderer.sprite = sprites[1];  // 플레이어 총알에 맞는 번쩍이는 효과
+            Invoke("EnemySpriteSwap", 0.1f);     // 번쩍이 다시 원상태로 돌아오기
 
-            // Debug.Log("hp : " + hp);
             if (hp <= 0)
             {
                 Destroy(gameObject);
@@ -193,9 +179,20 @@ public class Enemy : MonoBehaviour
                 ScoreUp(enemyScore);  // 점수 누적
                 Effect("D");  // Dead Effect
                 ItemDrop();   // 아이템 랜덤 생성
-                // Debug.Log("점수 : " + GameManager.gameScore);
             }
         }
+
+/*
+        // 쉴드에 다이면 적 파괴
+        else if(collision.gameObject.tag == "Shield")
+        {
+            Destroy(gameObject);
+            Destroy(HPbar.gameObject);
+            ScoreUp(enemyScore);  // 점수 누적
+            Effect("D");  // Dead Effect
+            ItemDrop();   // 아이템 랜덤 생성
+        }
+*/
     }
 
     // 적이 레이저에 맞은 상태이면
@@ -236,10 +233,32 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    // 총알이나 레이저에 맞으면 번쩍이는 효과를 주기위해 스프라이트 변경
+    //-0 총알이나 레이저에 맞으면 번쩍이는 효과를 주기위해 스프라이트 변경
     void EnemySpriteSwap()
     {
         spriteRenderer.sprite = sprites[0];
+    }
+
+    //-0 적 파괴 이팩트 
+    void Effect(string type)
+    {
+        // 적 이름에 따라 파괴 이팩트 다르게 적용
+        float desTime = 1.5f;
+        int index = 0;
+        if (enemyName == "L") index = 0;
+        if (enemyName == "M") index = 1;
+        if (enemyName == "S") index = 2;
+        if (type == "H")
+        {
+            index = 3;
+            desTime = 1.0f;
+        }
+
+        objectManager.deadEnemySound.Play();  // 파괴 소리 재생
+        // 파괴 이팩트 
+        GameObject deadEff = Instantiate(objectManager.deadEnemyEffect[index], transform.position + Vector3.down * 0.5f, transform.rotation);
+
+        Destroy(deadEff, desTime);  // 1.5초 후 파괴 이팩트 소멸
     }
 
     // 아이템 랜덤 생성
@@ -256,28 +275,6 @@ public class Enemy : MonoBehaviour
 
         // 오브젝트 메니저에 있는 아이템 생성
         Instantiate(objectManager.itemObjs[itemIndex], transform.position, transform.rotation);
-    }
-
-    // 적 파괴 이팩트 
-    void Effect(string type)
-    {
-        // 적 이름에 따라 파괴 이팩트 다르게 적용
-        float desTime = 1.5f;
-        int index=0;
-        if (enemyName == "L") index = 0;
-        if (enemyName == "M") index = 1;
-        if (enemyName == "S") index = 2;
-        if (type == "H")
-        {
-            index = 3;
-            desTime = 1.0f;
-        }
-
-        objectManager.deadEnemySound.Play();  // 파괴 소리 재생
-        // 파괴 이팩트 
-        GameObject deadEff = Instantiate(objectManager.deadEnemyEffect[index], transform.position+Vector3.down *0.5f, transform.rotation);
-        
-        Destroy(deadEff, desTime);  // 1.5초 후 파괴 이팩트 소멸
     }
 
     // 게임 점수 누적

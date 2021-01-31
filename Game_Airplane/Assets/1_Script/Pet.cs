@@ -4,22 +4,13 @@ using UnityEngine;
 
 public class Pet : MonoBehaviour
 {
-
     public float maxBulletShootTime;    // 총알 나가는 간격
     public float curBulletShootTime;
 
-    public Player playerCode;
-    public Laser laserCode;
-    public ObjectManager objectManager;
+    public Player playerCode;           // Player 코드 가져오기용
+    public Laser laserCode;             // Laser 코드 가져오기용
+    public ObjectManager objectManager; // ObjectManager 코드 가져오기용
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
     void Update()
     {
         PetLBullet();
@@ -38,9 +29,8 @@ public class Pet : MonoBehaviour
         if (gameObject.activeSelf == false)  // 펫이 숨기기 상태이면
             return;
 
-        if (curBulletShootTime < maxBulletShootTime)  // 종알 발사 시간이 안됨면
+        if (curBulletShootTime < maxBulletShootTime)  // 총알 발사 시간이 안됨면
             return;
-
 
         // 총알타입(bulletType)  1: 직선 발사, 2: 점점 퍼지게 발사
         // 파워(power) 1, 2, 3에 따라 총알 형태와 속도 설정
@@ -56,11 +46,11 @@ public class Pet : MonoBehaviour
         }
 
         // 총알 생성                       
-        GameObject bullet_01 = Instantiate(objectManager.petBulletObj          // objectManager 에있는 playerBulletObjB 총알 사용
+        GameObject bullet_01 = Instantiate(objectManager.petBulletObj                 // objectManager 에있는 playerBulletObjB 총알 사용
                                             , transform.position + Vector3.up * 0.7f  // 플레이어 위치에서 위쪽으로 0.7 만큼 위에
                                             , transform.rotation);                    // 회전 없이
-        Rigidbody2D rigid_01 = bullet_01.GetComponent<Rigidbody2D>();               // 중력 적용
-        rigid_01.AddForce(Vector3.up * playerCode.bulletSpeed, ForceMode2D.Impulse);           // 위쪽으로 bulletSpeed 만큼 속도록 이동
+        Rigidbody2D rigid_01 = bullet_01.GetComponent<Rigidbody2D>();                 // 중력 적용
+        rigid_01.AddForce(Vector3.up * playerCode.bulletSpeed, ForceMode2D.Impulse);  // 위쪽으로 bulletSpeed 만큼 속도록 이동
         
         curBulletShootTime = 0;  // 총알 발사 시간 누적 초기화
 
